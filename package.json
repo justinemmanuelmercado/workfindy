@@ -5,10 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "ci-build": "npx tsc"
   },
   "author": "",
   "license": "ISC",
+  "type": "commonjs",
+  
   "devDependencies": {
     "@types/node": "^18.7.13",
     "nodemon": "^2.0.19",
@@ -16,6 +19,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
+    "discord.js": "^14.7.1",
     "dotenv": "^16.0.1",
     "snoostorm": "^1.5.2",
     "snoowrap": "^1.23.0"
