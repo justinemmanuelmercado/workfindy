@@ -1,5 +1,5 @@
 import { CommentStream, SubmissionStream } from "snoostorm";
-import { Comment, Submission, VoteableContent } from "snoowrap";
+import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
 import { Watcher } from "./abstract/Watcher";
 import { RedditPlatform } from "./RedditPlatform";
