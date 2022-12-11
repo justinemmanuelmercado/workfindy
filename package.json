@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "nodemon -w lib -w src/index.ts --inspect=0.0.0.0 src/index.ts",
     "dev": "nodemon src/index.ts",
+    "dev:debug": "nodemon --inspect src/index.ts",
     "ci-build": "npx tsc"
   },
   "author": "",

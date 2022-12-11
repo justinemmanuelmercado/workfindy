@@ -9,8 +9,8 @@
       "request": "attach",
       "name": "Launch PH-Dev",
       "processId": "${command:PickProcess}",
-      "sourceMaps": true,
-      "restart": true
+      "restart": true,
+      "protocol": "inspector"
     }
   ]
 }
