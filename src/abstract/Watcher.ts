@@ -4,7 +4,7 @@ import { Platform } from "./Platform";
 export abstract class Watcher {
   abstract platform: Platform;
 
-  constructor(platform: Platform) {}
+  constructor() {}
 
   // Each watcher has its own separate config
   abstract config: any;
