@@ -40,7 +40,13 @@ export class DiscordChannel implements Channel {
 
   async sendMessage(notice: Notice) {
     if (!this.channel) await this.setChannel();
-
-    await this.channel?.send(notice.body);
+    try {
+      await this.channel?.send(notice.body);
+    } catch (e) {
+      console.log(
+        `[ERROR] Can't send message to channel: ${this.channelId} ${this.name}`
+      );
+      console.log(e);
+    }
   }
 }

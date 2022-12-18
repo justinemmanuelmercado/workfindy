@@ -1,16 +1,11 @@
-// Combine both functions into a single class. That class will be used to filter posts. Call arg1 as postTitle, and arg2 as postBody
-
-
-function findMatchingStrings(
+export function getSimilarStrings(
   strings: string[],
-  arg1: string,
-  arg2: string
-): { [key: string]: string } {
-  const matchingStrings: { [key: string]: string } = {};
+  arg1: string
+): { string: string; snippet: string }[] {
+  const matchingStrings: { string: string; snippet: string }[] = [];
 
   // Split the second and third arguments into individual words
   const words1 = arg1.split(" ");
-  const words2 = arg2.split(" ");
 
   // Check each string in the first argument
   for (const str of strings) {
@@ -20,22 +15,14 @@ function findMatchingStrings(
 
       // Check if the distance is 1 or less
       if (distance <= 1) {
-        matchingStrings[str] = arg1;
-      }
-    }
-    for (const word of words2) {
-      const distance = levenshteinDistance(str, word);
-
-      // Check if the distance is 1 or less
-      if (distance <= 1) {
-        matchingStrings[str] = arg2;
+        // Snippet is equal to 5 characters before where we found the match in word + the word itself
+        matchingStrings.push({ string: str, snippet: word });
       }
     }
   }
 
   return matchingStrings;
 }
-
 function levenshteinDistance(a: string, b: string): number {
   // Create a matrix to store the distances between the substrings of the two strings
   const distances = new Array(b.length + 1);
