@@ -3,15 +3,23 @@ import { Channel } from "./abstract/Channel";
 import { Notice } from "./abstract/Notice";
 import { DiscordMedium } from "./DiscordMedium";
 
-export class TestDiscordChannel implements Channel {
-  name: string = "Test Discord Channel";
+export class DiscordChannel implements Channel {
+  name: string;
   channel?: TextChannel;
   medium: DiscordMedium;
-  channelId: string = process.env.JOBBYMCJOBFACE_TEST_CHANNEL_ID || "";
+  channelId: string;
+  constructor(medium: DiscordMedium, channelId: string, name: string) {
+    // Test if channelId is an empty string, throw error
+    if (channelId === "") {
+      throw new Error("Channel ID is not set for DiscordChannel: " + name);
+    }
 
-  constructor(medium: DiscordMedium) {
     this.medium = medium;
     this.medium.ready(() => this.setChannel());
+
+    this.channelId = channelId;
+
+    this.name = name;
   }
 
   async setChannel() {
