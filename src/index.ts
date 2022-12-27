@@ -4,6 +4,7 @@ import { ConsoleChannel } from "./ConsoleChannel";
 import { DiscordChannel } from "./DiscordChannel";
 import { DiscordMedium } from "./DiscordMedium";
 import { RedditBotForHireWatcher } from "./RedditBotForHireWatcher";
+import { RedditBotTestingGroundWatcher } from './RedditBotTestingGroundWatcher';
 import { RedditPlatform } from "./RedditPlatform";
 config();
 
@@ -20,6 +21,13 @@ async function main() {
     process.env.JOBBYMCJOBFACE_DEVELOPER_CHANNEL_ID || "",
     "Dev Channel"
   );
+
+  const testDiscordChannel = new DiscordChannel(
+    discordMedium,
+    process.env.JOBBYMCJOBFACE_TEST_CHANNEL_ID || "",
+    "Test Channel"
+  );
+
   // An array of words related to job postings for web developers, includes job description and popular languages and frameworks limit to one word each value
   const keywords = [
     "developer",
@@ -49,11 +57,19 @@ async function main() {
     "react native",
     "full stack",
   ];
+  
+
+  const redditTestWatcher = new RedditBotTestingGroundWatcher(
+    redditPlatform
+  )
 
   const redditFHDeveloperWatcher = new RedditBotForHireWatcher(
     redditPlatform,
     keywords
   );
+
+  redditTestWatcher.channels = [testDiscordChannel, logChannel];
+  redditTestWatcher.listen();
   redditFHDeveloperWatcher.setChannels([devDiscordChannel, logChannel]);
   redditFHDeveloperWatcher.listen();
 }
