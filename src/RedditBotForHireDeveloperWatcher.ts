@@ -2,20 +2,46 @@ import { CommentStream, SubmissionStream } from "snoostorm";
 import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
 import { Watcher } from "./abstract/Watcher";
-import { getSimilarStrings } from "./filters";
+import { getSimilarStrings, matchingWords } from "./filters";
 import { RedditPlatform } from "./RedditPlatform";
 
-export class RedditBotForHireWatcher implements Watcher {
+export class RedditBotForHireDeveloperWatcher implements Watcher {
   id = "RedditBotTestingGround";
   config: any = {};
   platform;
   channels: Channel[] = [];
-  keywords: string[] = [];
+  keywords: string[] = [
+    "developer",
+    "web",
+    "angular",
+    "react",
+    "reactjs",
+    "node",
+    "nodejs",
+    "javascript",
+    "python",
+    "java",
+    "ruby",
+    "c#",
+    "c++",
+    "html",
+    "css",
+    "typescript",
+    "php",
+    "ruby",
+    "rust",
+    "golang",
+    "flutter",
+    "vue",
+    "swift",
+    "kotlin",
+    "react native",
+    "full stack",
+  ];
 
-  constructor(platform: RedditPlatform, keywords: string[]) {
+  constructor(platform: RedditPlatform) {
     this.platform = platform;
     this.config.subreddit = "forhire";
-    this.keywords = keywords;
     this.connect();
   }
 
@@ -71,19 +97,28 @@ export class RedditBotForHireWatcher implements Watcher {
   }
 
   async handleSubmission(item: Submission) {
-    const matchesTitle = getSimilarStrings(this.keywords, item.title);
+    const matchesHiring = matchingWords(["[[HIRING]]"], item.title);
+    // Post is not hiring, so we don't care about it.
+    if (matchesHiring.length === 0) {
+      return;
+    }
+
+    const matchesTitle = matchingWords(this.keywords, item.title);
+    const matchesBody = matchingWords(this.keywords, item.selftext);
     let message = "\n\n";
     message += "\n---------------------------------------------------------";
-    message += `\n**NEW POST: ${item.title}**`;
     const title = "NEW MATCHED POST IN /r/forhire";
-    if (matchesTitle.length > 0) {
+    if (matchesTitle.length > 0 || matchesBody.length > 0) {
       message += `\n[LINK HERE](https://www.reddit.com/${item.permalink})`;
       message += "\n---------------------------------------------------------";
       message += `\nMatches the following keywords:`;
       matchesTitle.forEach((match) => {
-        message += `\n${match.string} - ${match.snippet}`;
+        message += `\n${match}`;
       });
-      message += "\n\n**Body:**\n```" + item.selftext + "```";
+      matchesBody.forEach((match) => {
+        message += `\n${match}`;
+      });
+      message += "\n\n**Title:**\n```" + item.title + "```";
       for (const channel of this.channels) {
         channel.sendMessage({
           title,

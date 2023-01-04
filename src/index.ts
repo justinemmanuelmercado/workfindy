@@ -3,7 +3,7 @@ import { MockMedium } from "./abstract/Medium";
 import { ConsoleChannel } from "./ConsoleChannel";
 import { DiscordChannel } from "./DiscordChannel";
 import { DiscordMedium } from "./DiscordMedium";
-import { RedditBotForHireWatcher } from "./RedditBotForHireWatcher";
+import { RedditBotForHireDeveloperWatcher } from "./RedditBotForHireDeveloperWatcher";
 import { RedditBotTestingGroundWatcher } from './RedditBotTestingGroundWatcher';
 import { RedditPlatform } from "./RedditPlatform";
 config();
@@ -28,48 +28,19 @@ async function main() {
     "Test Channel"
   );
 
-  // An array of words related to job postings for web developers, includes job description and popular languages and frameworks limit to one word each value
-  const keywords = [
-    "developer",
-    "web",
-    "angular",
-    "react",
-    "reactjs",
-    "node",
-    "nodejs",
-    "javascript",
-    "python",
-    "java",
-    "ruby",
-    "c#",
-    "c++",
-    "html",
-    "css",
-    "typescript",
-    "php",
-    "ruby",
-    "rust",
-    "golang",
-    "flutter",
-    "vue",
-    "swift",
-    "kotlin",
-    "react native",
-    "full stack",
-  ];
+
   
 
   const redditTestWatcher = new RedditBotTestingGroundWatcher(
     redditPlatform
   )
 
-  const redditFHDeveloperWatcher = new RedditBotForHireWatcher(
-    redditPlatform,
-    keywords
+  const redditFHDeveloperWatcher = new RedditBotForHireDeveloperWatcher(
+    redditPlatform
   );
 
   redditTestWatcher.channels = [testDiscordChannel, logChannel];
-  redditTestWatcher.listen();
+  // redditTestWatcher.listen();
   redditFHDeveloperWatcher.setChannels([devDiscordChannel, logChannel]);
   redditFHDeveloperWatcher.listen();
 }

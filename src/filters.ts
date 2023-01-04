@@ -56,3 +56,18 @@ function levenshteinDistance(a: string, b: string): number {
   // Return the final distance
   return distances[b.length][a.length];
 }
+
+export function matchingWords(words: string[], str: string): string[] {
+  const matchedWords = [];
+  // Split the string into an array of individual words
+  const strWords = str.split(' ');
+  // Loop through each word in the string
+  for (const strWord of strWords) {
+    // Check if the word is in the array of words
+    if (words.includes(strWord)) {
+      // If it is, add it to the array of matched words
+      matchedWords.push(strWord);
+    }
+  }
+  return matchedWords;
+}
