@@ -74,7 +74,7 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
   }
 
   async handleComment(item: Comment) {
-    const matchesBody = getSimilarStrings(this.keywords, item.body);
+    const matchesBody = matchingWords(this.keywords, item.body);
     let message = "\n\n";
     message += "\n---------------------------------------------------------";
     message += "\n**Found a match in a comment:**";
@@ -84,7 +84,7 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
       message += "\n---------------------------------------------------------";
       message += `\nMatches the following keywords:`;
       matchesBody.forEach((match) => {
-        message += `\n**${match.string} - ${match.snippet}**`;
+        message += `\n**${match}**`;
       });
       message += "\n\n**Body:**\n```" + item.body + "```";
       for (const channel of this.channels) {
@@ -97,7 +97,7 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
   }
 
   async handleSubmission(item: Submission) {
-    const matchesHiring = matchingWords(["[[HIRING]]"], item.title);
+    const matchesHiring = matchingWords(["HIRING"], item.title);
     // Post is not hiring, so we don't care about it.
     if (matchesHiring.length === 0) {
       return;

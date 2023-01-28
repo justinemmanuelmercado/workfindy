@@ -60,7 +60,11 @@ function levenshteinDistance(a: string, b: string): number {
 export function matchingWords(words: string[], str: string): string[] {
   const matchedWords = [];
   // Split the string into an array of individual words
-  const strWords = str.split(' ');
+  const strWords = str.toLowerCase().split(" ");
+  // Loop through each word in the array of words
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i].toLowerCase();
+  }
   // Loop through each word in the string
   for (const strWord of strWords) {
     // Check if the word is in the array of words
