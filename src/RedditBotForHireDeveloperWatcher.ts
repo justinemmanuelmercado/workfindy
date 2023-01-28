@@ -2,7 +2,7 @@ import { CommentStream, SubmissionStream } from "snoostorm";
 import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
 import { Watcher } from "./abstract/Watcher";
-import { getSimilarStrings, matchingWords } from "./filters";
+import { matchingWords } from "./filters";
 import { RedditPlatform } from "./RedditPlatform";
 
 export class RedditBotForHireDeveloperWatcher implements Watcher {
