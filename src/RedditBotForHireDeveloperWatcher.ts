@@ -97,7 +97,7 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
   }
 
   async handleSubmission(item: Submission) {
-    const matchesHiring = matchingWords(["HIRING"], item.title);
+    const matchesHiring = matchingWords(["[hiring]"], item.title);
     // Post is not hiring, so we don't care about it.
     if (matchesHiring.length === 0) {
       return;
