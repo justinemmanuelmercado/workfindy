@@ -3,6 +3,8 @@ import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
 import { Watcher } from "./abstract/Watcher";
 import { matchingWords } from "./filters";
+import { commentToNotice } from "./helper/comment-to-notice";
+import { submissionToNotice } from "./helper/post-to-notice";
 import { RedditPlatform } from "./RedditPlatform";
 
 export class RedditBotForHireDeveloperWatcher implements Watcher {
@@ -75,23 +77,9 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
 
   async handleComment(item: Comment) {
     const matchesBody = matchingWords(this.keywords, item.body);
-    let message = "\n\n";
-    message += "\n---------------------------------------------------------";
-    message += "\n**Found a match in a comment:**";
-    const title = "NEW MATCHED COMMENT IN /r/forhire";
     if (matchesBody.length > 0) {
-      message += `\n[LINK HERE](https://www.reddit.com/${item.permalink})`;
-      message += "\n---------------------------------------------------------";
-      message += `\nMatches the following keywords:`;
-      matchesBody.forEach((match) => {
-        message += `\n**${match}**`;
-      });
-      message += "\n\n**Body:**\n```" + item.body + "```";
       for (const channel of this.channels) {
-        channel.sendMessage({
-          title: title,
-          body: message,
-        });
+        channel.sendMessage(await commentToNotice(item, matchesBody));
       }
     }
   }
@@ -105,25 +93,11 @@ export class RedditBotForHireDeveloperWatcher implements Watcher {
 
     const matchesTitle = matchingWords(this.keywords, item.title);
     const matchesBody = matchingWords(this.keywords, item.selftext);
-    let message = "\n\n";
-    message += "\n---------------------------------------------------------";
-    const title = "NEW MATCHED POST IN /r/forhire";
     if (matchesTitle.length > 0 || matchesBody.length > 0) {
-      message += `\n[LINK HERE](https://www.reddit.com/${item.permalink})`;
-      message += "\n---------------------------------------------------------";
-      message += `\nMatches the following keywords:`;
-      matchesTitle.forEach((match) => {
-        message += `\n${match}`;
-      });
-      matchesBody.forEach((match) => {
-        message += `\n${match}`;
-      });
-      message += "\n\n**Title:**\n```" + item.title + "```";
       for (const channel of this.channels) {
-        channel.sendMessage({
-          title,
-          body: message,
-        });
+        channel.sendMessage(
+          submissionToNotice(item, [...matchesBody, ...matchesTitle])
+        );
       }
     }
   }

@@ -8,9 +8,8 @@ export class ConsoleChannel implements Channel {
   constructor(medium: Medium) {
     this.medium = medium;
   }
-  async sendMessage({ body, title }: Notice) {
-    console.log("START: ", new Date().toISOString());
-    console.log("TITLE ----" + title + "---------");
-    console.log("BODY ----" + body + "---------");
+  async sendMessage(notice: Notice) {
+    console.log("NEW Notice");
+    console.log(notice);
   }
 }

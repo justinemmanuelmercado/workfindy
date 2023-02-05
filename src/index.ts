@@ -47,7 +47,7 @@ async function main() {
     subreddit: "forhire",
   });
 
-  redditTestWatcher.channels = [testDiscordChannel, logChannel];
+  // redditTestWatcher.channels = [testDiscordChannel, logChannel];
   // redditTestWatcher.listen();
   redditFHDeveloperWatcher.setChannels([devDiscordChannel, logChannel]);
   redditFHDeveloperWatcher.listen();

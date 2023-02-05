@@ -1,8 +1,11 @@
 import { CommentStream, SubmissionStream } from "snoostorm";
 import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
+import { Notice } from './abstract/Notice';
 import { Watcher } from "./abstract/Watcher";
 import { matchingWords } from "./filters";
+import { commentToNotice } from './helper/comment-to-notice';
+import { submissionToNotice } from './helper/post-to-notice';
 import { RedditPlatform } from "./RedditPlatform";
 
 export class RedditBotHiringWatcher implements Watcher {
@@ -76,57 +79,22 @@ export class RedditBotHiringWatcher implements Watcher {
     }
 
     const matchesBody = matchingWords(this.keywordsCommentBody, item.body);
-    let message = "\n\n";
-    message += "\n---------------------------------------------------------";
-    message += "\n**Found a match in a comment:**";
-    const title = "NEW MATCHED COMMENT IN /r/" + this.subreddit;
     if (matchesBody.length > 0) {
-      message += `\n[LINK HERE](https://www.reddit.com/${item.permalink})`;
-      message += "\n---------------------------------------------------------";
-      message += `\nMatches the following keywords:`;
-      matchesBody.forEach((match) => {
-        message += `\n**${match}**`;
-      });
-      message += "\n\n**Body:**\n```" + item.body + "```";
-      this.sendToChannels({
-        title,
-        body: message,
-      });
+      this.sendToChannels(await commentToNotice(item));
     }
   }
 
-  sendToChannels = async (message: { title: string; body: string }) => {
+  sendToChannels = async (notice: Notice) => {
     for (const channel of this.channels) {
-      await channel.sendMessage({
-        title: message.title,
-        body: message.body,
-      });
+      await channel.sendMessage(notice);
     }
   };
 
   async handleSubmission(item: Submission) {
     const matchesTitle = matchingWords(this.keywordsPostTitle ?? [], item.title);
     const matchesBody = matchingWords(this.keywordsPostBody ?? [], item.selftext);
-    console.log("L ", matchesTitle, item.title);
-    let message = "\n\n";
-    message += "\n---------------------------------------------------------";
-    const title = "NEW MATCHED POST IN /r/" + this.subreddit;
     if (matchesTitle.length > 0 || matchesBody.length > 0) {
-      message += `\n[LINK HERE](https://www.reddit.com/${item.permalink})`;
-      message += "\n---------------------------------------------------------";
-      message += `\nMatches the following keywords:`;
-      matchesTitle.forEach((match) => {
-        message += `\n${match}`;
-      });
-      matchesBody.forEach((match) => {
-        message += `\n${match}`;
-      });
-      message += "\n\n**Title:**\n```" + item.title + "```";
-
-      this.sendToChannels({
-        title,
-        body: message,
-      });
+      this.sendToChannels(submissionToNotice(item));
     }
   }
 

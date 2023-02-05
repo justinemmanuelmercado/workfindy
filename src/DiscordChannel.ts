@@ -1,4 +1,4 @@
-import { TextChannel } from "discord.js";
+import { TextChannel, EmbedBuilder } from "discord.js";
 import { Channel } from "./abstract/Channel";
 import { Notice } from "./abstract/Notice";
 import { DiscordMedium } from "./DiscordMedium";
@@ -41,11 +41,20 @@ export class DiscordChannel implements Channel {
   async sendMessage(notice: Notice) {
     if (!this.channel) await this.setChannel();
     try {
-      await this.channel?.send(notice.body);
+      const messageEmbed = new EmbedBuilder()
+        .setColor(0x0099f)
+        .setTitle(notice.title)
+        .setURL(notice.url)
+        .setImage(notice.imageUrl ?? null)
+        .setAuthor({name: notice.authorName, url: notice.authorUrl})
+        .setDescription(notice.body.length === 0 ? "No body" : notice.body)
+        .setTimestamp()
+      await this.channel?.send({ embeds: [messageEmbed] });
     } catch (e) {
       console.log(
-        `[ERROR] Can't send message to channel: ${this.channelId} ${this.name}`
+        `[ERROR] Can't send message to channel: ${this.name}`
       );
+      console.log(notice);
       console.log(e);
     }
   }

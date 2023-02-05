@@ -2,6 +2,8 @@ import { CommentStream, SubmissionStream } from "snoostorm";
 import { Comment, Submission } from "snoowrap";
 import { Channel } from "./abstract/Channel";
 import { Watcher } from "./abstract/Watcher";
+import { commentToNotice } from './helper/comment-to-notice';
+import { submissionToNotice } from './helper/post-to-notice';
 import { RedditPlatform } from "./RedditPlatform";
 
 export class RedditBotTestingGroundWatcher implements Watcher {
@@ -20,13 +22,13 @@ export class RedditBotTestingGroundWatcher implements Watcher {
     const postStream = new SubmissionStream(this.platform.snoowrap, {
       subreddit: this.config.subreddit,
       limit: 10,
-      pollTime: 3000,
+      pollTime: 30000,
     });
 
     const commentStream = new CommentStream(this.platform.snoowrap, {
       subreddit: this.config.subreddit,
       limit: 10,
-      pollTime: 3000,
+      pollTime: 30000,
     });
 
     this.config.streams = [postStream, commentStream];
@@ -45,18 +47,12 @@ export class RedditBotTestingGroundWatcher implements Watcher {
 
   async handleComment(item: Comment) {
     for (const channel of this.channels) {
-      channel.sendMessage({
-        title: `NEW COMMENT`,
-        body: `${item.permalink} - ${item.body}`,
-      });
+      channel.sendMessage(await commentToNotice(item));
     }
   }
   async handleSubmission(item: Submission) {
     for (const channel of this.channels) {
-      channel.sendMessage({
-        title: `NEW POST - ${item.title}`,
-        body: `${item.url}`,
-      });
+      channel.sendMessage(submissionToNotice(item));
     }
   }
 }
