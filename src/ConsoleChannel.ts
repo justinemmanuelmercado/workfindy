@@ -1,14 +1,12 @@
 import { Channel } from "./abstract/Channel";
-import { Medium } from "./abstract/Medium";
 import { Notice } from "./abstract/Notice";
 
-export class ConsoleChannel implements Channel {
-  name = "Console Channel";
-  medium: Medium;
-  constructor(medium: Medium) {
-    this.medium = medium;
+export class ConsoleChannel extends Channel<{}> {
+  constructor(config: {} = {}, name: string = "ConsoleChannel") {
+    super(config, name);
   }
-  async sendMessage(notice: Notice) {
+
+  sendMessage = async (notice: Notice) => {
     console.log("NEW Notice");
     console.log(notice);
   }

@@ -1,5 +1,4 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { Medium } from "./abstract/Medium";
 
 export class DiscordMedium implements Medium {
   client: Client;

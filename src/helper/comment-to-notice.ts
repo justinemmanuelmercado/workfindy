@@ -9,7 +9,7 @@ export async function commentToNotice(comment: Comment, keywords: string[] = [])
 
   return {
     title: `Comment from ${comment.author.name}`,
-    body: `${comment.permalink} - ${comment.body}`,
+    body: `${comment.body}`,
     url: `https://www.reddit.com${comment.permalink}`,
     authorName: comment.author.name,
     authorUrl: `https://www.reddit.com/user/${comment.author.name}`,

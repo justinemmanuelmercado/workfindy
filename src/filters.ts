@@ -57,14 +57,17 @@ function levenshteinDistance(a: string, b: string): number {
   return distances[b.length][a.length];
 }
 
+/**
+ * 
+ * @param words An array of words to match the string str. KEEP THIS ARRAY LOWERCASE OR IT WILL NOT WORK
+ * @param str String to match to the array of words
+ * @returns Returns matched words
+ */
 export function matchingWords(words: string[], str: string): string[] {
   const matchedWords = [];
   // Split the string into an array of individual words
   const strWords = str.toLowerCase().split(" ");
-  // Loop through each word in the array of words
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i].toLowerCase();
-  }
+
   // Loop through each word in the string
   for (const strWord of strWords) {
     // Check if the word is in the array of words
