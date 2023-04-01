@@ -1,11 +1,8 @@
-export function getSimilarStrings(
-  strings: string[],
-  arg1: string
-): { string: string; snippet: string }[] {
+export function getSimilarStrings(strings: string[], arg1: string): { string: string; snippet: string }[] {
   const matchingStrings: { string: string; snippet: string }[] = [];
 
   // Split the second and third arguments into individual words
-  const words1 = arg1.split(" ");
+  const words1 = arg1.split(' ');
 
   // Check each string in the first argument
   for (const str of strings) {
@@ -58,7 +55,7 @@ function levenshteinDistance(a: string, b: string): number {
 }
 
 /**
- * 
+ *
  * @param words An array of words to match the string str. KEEP THIS ARRAY LOWERCASE OR IT WILL NOT WORK
  * @param str String to match to the array of words
  * @returns Returns matched words
@@ -66,7 +63,7 @@ function levenshteinDistance(a: string, b: string): number {
 export function matchingWords(words: string[], str: string): string[] {
   const matchedWords = [];
   // Split the string into an array of individual words
-  const strWords = str.toLowerCase().split(" ");
+  const strWords = str.toLowerCase().split(' ');
 
   // Loop through each word in the string
   for (const strWord of strWords) {

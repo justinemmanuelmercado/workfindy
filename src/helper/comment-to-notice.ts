@@ -2,8 +2,9 @@ import { Comment } from 'snoowrap';
 import { Notice } from '../abstract/Notice';
 
 export async function commentToNotice(comment: Comment, keywords: string[] = []): Promise<Notice> {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if(comment.author.icon_img.then){
+  if (comment.author.icon_img.then) {
     comment.author.icon_img = await comment.author.icon_img;
   }
 
@@ -14,6 +15,6 @@ export async function commentToNotice(comment: Comment, keywords: string[] = [])
     authorName: comment.author.name,
     authorUrl: `https://www.reddit.com/user/${comment.author.name}`,
     imageUrl: comment.author.icon_img,
-    keywords
+    keywords,
   };
 }

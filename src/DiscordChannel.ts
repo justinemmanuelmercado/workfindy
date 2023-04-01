@@ -1,7 +1,7 @@
-import { TextChannel, EmbedBuilder, Client } from "discord.js";
-import { Channel } from "./abstract/Channel";
-import { Notice } from "./abstract/Notice";
-import { matchingWords } from "./filters";
+import { TextChannel, EmbedBuilder, Client } from 'discord.js';
+import { Channel } from './abstract/Channel';
+import { Notice } from './abstract/Notice';
+import { matchingWords } from './filters';
 
 type DiscordChannelConfig = {
   channelId: string;
@@ -10,27 +10,19 @@ type DiscordChannelConfig = {
 
 export class DiscordChannel extends Channel<DiscordChannelConfig> {
   channel?: TextChannel;
-  constructor(
-    config: DiscordChannelConfig,
-    name: string,
-    keywords: string[] = []
-  ) {
+  constructor(config: DiscordChannelConfig, name: string, keywords: string[] = []) {
     super(config, name, keywords);
-    if (config.channelId === "") {
-      console.error("Channel ID is not set for DiscordChannel: " + name);
+    if (config.channelId === '') {
+      console.error('Channel ID is not set for DiscordChannel: ' + name);
     }
   }
 
   async setChannel(): Promise<DiscordChannel | null> {
     try {
-      const cached = this.config.client.channels.cache.get(
-        this.config.channelId
-      ) as TextChannel;
+      const cached = this.config.client.channels.cache.get(this.config.channelId) as TextChannel;
       this.channel = cached;
       if (!cached) {
-        const channel = await this.config.client.channels.fetch(
-          this.config.channelId
-        );
+        const channel = await this.config.client.channels.fetch(this.config.channelId);
         this.channel = channel as TextChannel;
       }
       return this;
@@ -59,7 +51,7 @@ export class DiscordChannel extends Channel<DiscordChannelConfig> {
         .setURL(notice.url)
         .setImage(notice.imageUrl ?? null)
         .setAuthor({ name: notice.authorName, url: notice.authorUrl })
-        .setDescription(notice.body.length === 0 ? "No body" : notice.body)
+        .setDescription(notice.body.length === 0 ? 'No body' : notice.body)
         .setTimestamp();
       await this.channel?.send({ embeds: [messageEmbed] });
     } catch (e) {

@@ -1,6 +1,6 @@
-import { CommentStream, SubmissionStream } from "snoostorm";
-import Snoowrap, { Comment, Submission } from "snoowrap";
-import { Channel } from "./abstract/Channel";
+import { CommentStream, SubmissionStream } from 'snoostorm';
+import Snoowrap, { Comment, Submission } from 'snoowrap';
+import { Channel } from './abstract/Channel';
 import { Notice } from './abstract/Notice';
 import { commentToNotice } from './helper/comment-to-notice';
 import { submissionToNotice } from './helper/post-to-notice';
@@ -39,12 +39,12 @@ export class RedditWatcher {
 
   async listen() {
     this.streams.forEach((stream: CommentStream | SubmissionStream) => {
-      stream.on("item", async (item: Comment | Submission) => {
+      stream.on('item', async (item: Comment | Submission) => {
         if (isComment(item)) {
-          if(!this.commentFilter(await commentToNotice(item))) return;
+          if (!this.commentFilter(await commentToNotice(item))) return;
           this.sendToChannels(await commentToNotice(item));
         } else {
-          if(!this.postFilter(submissionToNotice(item))) return;
+          if (!this.postFilter(submissionToNotice(item))) return;
           this.sendToChannels(submissionToNotice(item));
         }
       });
@@ -59,5 +59,5 @@ export class RedditWatcher {
 }
 
 function isComment(item: Comment | Submission): item is Comment {
-  return item.hasOwnProperty("parent_id");
+  return Object.prototype.hasOwnProperty.call(item, 'parent_id');
 }
