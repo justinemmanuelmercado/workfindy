@@ -2,6 +2,7 @@ import { TextChannel, EmbedBuilder, Client } from 'discord.js';
 import { Channel } from './abstract/Channel';
 import { Notice } from './abstract/Notice';
 import { matchingWords } from './filters';
+import { truncateString } from './helper/truncate-string';
 
 type DiscordChannelConfig = {
   channelId: string;
@@ -51,7 +52,7 @@ export class DiscordChannel extends Channel<DiscordChannelConfig> {
         .setURL(notice.url)
         .setImage(notice.imageUrl ?? null)
         .setAuthor({ name: notice.authorName, url: notice.authorUrl })
-        .setDescription(notice.body.length === 0 ? 'No body' : notice.body)
+        .setDescription(notice.body.length === 0 ? 'No body' : truncateString(notice.body))
         .setTimestamp();
       await this.channel?.send({ embeds: [messageEmbed] });
     } catch (e) {

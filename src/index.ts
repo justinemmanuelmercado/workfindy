@@ -91,7 +91,6 @@ async function main() {
   );
   const consoleChannel = new ConsoleChannel();
   const channels = await connectChannels(discordClient, [devDiscordChannel, redditHiringDiscordChannel]);
-  console.log(1, channels);
   const forHireWatcher = new RedditWatcher(snoowrapClient, [consoleChannel, ...channels], 'forhire');
   forHireWatcher.postFilter = (notice: Notice): boolean => {
     return notice.title.toLowerCase().includes('[hiring]');
