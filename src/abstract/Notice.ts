@@ -5,6 +5,7 @@ export interface Notice {
   url: string;
   authorName: string;
   authorUrl: string;
+  raw: string;
 
   imageUrl?: string;
   keywords?: string[];

@@ -11,6 +11,7 @@ export function submissionToNotice(submission: Submission, keywords: string[] = 
     authorName: submission.author.name,
     authorUrl: `https://www.reddit.com/user/${submission.author.name}`,
     imageUrl,
+    raw: JSON.stringify(submission),
     keywords,
   };
 }

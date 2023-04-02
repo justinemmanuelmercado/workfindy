@@ -1,20 +1,20 @@
 import { CommentStream, SubmissionStream } from 'snoostorm';
 import Snoowrap, { Comment, Submission } from 'snoowrap';
-import { Channel } from '../abstract/Channel';
-import { Notice } from '../abstract/Notice';
-import { commentToNotice } from '../helper/comment-to-notice';
-import { submissionToNotice } from '../helper/post-to-notice';
+import { Channel } from '../../abstract/Channel';
+import { Notice } from '../../abstract/Notice';
+import { commentToNotice } from '../../helper/comment-to-notice';
+import { submissionToNotice } from '../../helper/post-to-notice';
+import { snoowrapClient } from './snoowrap';
 
-export class RedditWatcher {
-  snoowrap: Snoowrap;
+class RedditWatcher {
+  snoowrap: Snoowrap = snoowrapClient;
   streams: (CommentStream | SubmissionStream)[] = [];
-  channels: Channel<any>[] = [];
+  channels: Channel[] = [];
   subreddit: string;
   commentFilter: (notice: Notice) => boolean = () => true;
   postFilter: (notice: Notice) => boolean = () => true;
 
-  constructor(snoowrap: Snoowrap, channels: Channel<any>[], subreddit: string) {
-    this.snoowrap = snoowrap;
+  constructor(channels: Channel[], subreddit: string) {
     this.channels = channels;
     this.subreddit = subreddit;
 
@@ -61,3 +61,28 @@ export class RedditWatcher {
 function isComment(item: Comment | Submission): item is Comment {
   return Object.prototype.hasOwnProperty.call(item, 'parent_id');
 }
+
+class RedditWatcherFactory {
+  static createForHireWatcher(channels: Channel[]) {
+    const forHireWatcher = new RedditWatcher(channels, 'forhire');
+    forHireWatcher.postFilter = (notice: Notice): boolean => {
+      return notice.title.toLowerCase().includes('[hiring]');
+    };
+    forHireWatcher.commentFilter = (): boolean => {
+      return false;
+    };
+    return forHireWatcher;
+  }
+  static createRemoteJsWatcher(channels: Channel[]) {
+    const remoteJsWatcher = new RedditWatcher(channels, 'remotejs');
+    remoteJsWatcher.postFilter = (notice: Notice): boolean => {
+      return notice.title.toLowerCase().includes('hiring');
+    };
+    remoteJsWatcher.commentFilter = (): boolean => {
+      return false;
+    };
+    return remoteJsWatcher;
+  }
+}
+
+export { RedditWatcherFactory };

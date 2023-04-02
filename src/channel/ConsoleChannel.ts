@@ -1,9 +1,9 @@
 import { Channel } from '../abstract/Channel';
 import { Notice } from '../abstract/Notice';
 
-export class ConsoleChannel extends Channel<any> {
-  constructor(config = {}, name = 'ConsoleChannel') {
-    super(config, name);
+export class ConsoleChannel extends Channel {
+  constructor(config = { name: 'ConsoleChannel' }) {
+    super(config);
   }
 
   sendMessage = async (notice: Notice) => {

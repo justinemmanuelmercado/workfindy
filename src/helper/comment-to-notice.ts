@@ -15,6 +15,7 @@ export async function commentToNotice(comment: Comment, keywords: string[] = [])
     authorName: comment.author.name,
     authorUrl: `https://www.reddit.com/user/${comment.author.name}`,
     imageUrl: comment.author.icon_img,
+    raw: JSON.stringify(comment),
     keywords,
   };
 }
