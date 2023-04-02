@@ -1,8 +1,8 @@
 import { TextChannel, EmbedBuilder, Client } from 'discord.js';
-import { Channel } from './abstract/Channel';
-import { Notice } from './abstract/Notice';
-import { matchingWords } from './filters';
-import { truncateString } from './helper/truncate-string';
+import { Channel } from '../abstract/Channel';
+import { Notice } from '../abstract/Notice';
+import { matchingWords } from '../helper/matching-words';
+import { truncateString } from '../helper/truncate-string';
 
 type DiscordChannelConfig = {
   channelId: string;

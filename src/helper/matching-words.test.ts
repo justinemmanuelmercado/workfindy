@@ -1,4 +1,4 @@
-import { getSimilarStrings } from './filters';
+import { getSimilarStrings } from './matching-words';
 
 describe('getSimilarStrings', () => {
   it('returns an empty array when there are no matching strings', () => {

@@ -1,10 +1,10 @@
 import { config } from 'dotenv';
-import { DiscordChannel } from './DiscordChannel';
+import { DiscordChannel } from './channel/DiscordChannel';
 import { Client, GatewayIntentBits } from 'discord.js';
 import Snoowrap from 'snoowrap';
-import { RedditWatcher } from './RedditWatcher';
+import { RedditWatcher } from './watcher/RedditWatcher';
 import { Notice } from './abstract/Notice';
-import { ConsoleChannel } from './ConsoleChannel';
+import { ConsoleChannel } from './channel/ConsoleChannel';
 config();
 
 const devKeywords = [
@@ -111,4 +111,8 @@ async function main() {
   console.log('STARTED: ', new Date().toLocaleString());
 }
 
-main();
+main().catch((e) => console.error(e));
+
+// .finally(async () => {
+//   await prisma.$disconnect()
+// })

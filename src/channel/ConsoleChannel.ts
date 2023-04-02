@@ -1,5 +1,5 @@
-import { Channel } from './abstract/Channel';
-import { Notice } from './abstract/Notice';
+import { Channel } from '../abstract/Channel';
+import { Notice } from '../abstract/Notice';
 
 export class ConsoleChannel extends Channel<any> {
   constructor(config = {}, name = 'ConsoleChannel') {
