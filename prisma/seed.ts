@@ -11,6 +11,10 @@ const sources = [
     name: 'Reddit - RemoteJs',
     description: '',
   },
+  {
+    name: 'Reddit - Test',
+    description: '',
+  },
 ];
 async function main() {
   for (const source of sources) {

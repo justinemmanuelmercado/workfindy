@@ -1,9 +1,18 @@
-import { TextChannel, EmbedBuilder, Client } from 'discord.js';
+import { TextChannel, EmbedBuilder, Client, GatewayIntentBits } from 'discord.js';
 import { Channel, ChannelConfig } from '../../abstract/Channel';
 import { Notice } from '../../abstract/Notice';
 import { matchingWords } from '../../helper/matching-words';
 import { truncateString } from '../../helper/truncate-string';
+export let discordClient: Client;
 
+export const connectDiscordClient = async (): Promise<Client> => {
+  const token = process.env.JOBBYMCJOBFACE_DISCORD_TOKEN || '';
+  if (!token) throw new Error('No Discord token found in environment variables');
+  const client = new Client({ intents: GatewayIntentBits.Guilds });
+  await client.login(token);
+  discordClient = client;
+  return discordClient;
+};
 const devKeywords = [
   'software',
   'developer',
@@ -99,14 +108,14 @@ export class DiscordChannel extends Channel {
 }
 
 export class DiscordChannelFactory {
-  static createGeneralHiringDiscordChannel = (discordClient: Client) => {
+  static createGeneralHiringDiscordChannel = () => {
     return new DiscordChannel({
       channelId: process.env.JOBBYMCJOBFACE_HIRING_CHANNEL_ID || '',
       client: discordClient,
       name: 'Hiring Channel',
     });
   };
-  static createDevDiscordChannel = (discordClient: Client) => {
+  static createDevDiscordChannel = () => {
     return new DiscordChannel(
       {
         channelId: process.env.JOBBYMCJOBFACE_DEVELOPER_CHANNEL_ID || '',
@@ -115,5 +124,12 @@ export class DiscordChannelFactory {
       },
       devKeywords
     );
+  };
+  static createTestDiscordChannel = () => {
+    return new DiscordChannel({
+      channelId: process.env.JOBBYMCJOBFACE_TEST_CHANNEL_ID || '',
+      client: discordClient,
+      name: 'Test Channel',
+    });
   };
 }

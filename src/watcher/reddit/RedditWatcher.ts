@@ -13,6 +13,7 @@ class RedditWatcher {
   subreddit: string;
   commentFilter: (notice: Notice) => boolean = () => true;
   postFilter: (notice: Notice) => boolean = () => true;
+  name = 'Reddit';
 
   constructor(channels: Channel[], subreddit: string) {
     this.channels = channels;
@@ -41,11 +42,13 @@ class RedditWatcher {
     this.streams.forEach((stream: CommentStream | SubmissionStream) => {
       stream.on('item', async (item: Comment | Submission) => {
         if (isComment(item)) {
-          if (!this.commentFilter(await commentToNotice(item))) return;
-          this.sendToChannels(await commentToNotice(item));
+          const notice = await commentToNotice(item, this.name);
+          if (!this.commentFilter(notice)) return;
+          this.sendToChannels(notice);
         } else {
-          if (!this.postFilter(submissionToNotice(item))) return;
-          this.sendToChannels(submissionToNotice(item));
+          const notice = submissionToNotice(item, this.name);
+          if (!this.postFilter(notice)) return;
+          this.sendToChannels(notice);
         }
       });
     });
@@ -71,6 +74,7 @@ class RedditWatcherFactory {
     forHireWatcher.commentFilter = (): boolean => {
       return false;
     };
+    forHireWatcher.name = 'Reddit - For Hire';
     return forHireWatcher;
   }
   static createRemoteJsWatcher(channels: Channel[]) {
@@ -81,7 +85,13 @@ class RedditWatcherFactory {
     remoteJsWatcher.commentFilter = (): boolean => {
       return false;
     };
+    remoteJsWatcher.name = 'Reddit - RemoteJs';
     return remoteJsWatcher;
+  }
+  static createTestWatcher(channels: Channel[]) {
+    const testWatcher = new RedditWatcher(channels, 'testingground4bots');
+    testWatcher.name = 'Reddit - Test';
+    return testWatcher;
   }
 }
 

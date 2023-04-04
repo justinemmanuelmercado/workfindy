@@ -1,7 +1,7 @@
 import { Submission } from 'snoowrap';
 import { Notice } from '../abstract/Notice';
 
-export function submissionToNotice(submission: Submission, keywords: string[] = []): Notice {
+export function submissionToNotice(submission: Submission, sourceName: string): Notice {
   const imageUrl = submission.preview?.enabled ? submission.preview.images[0].source.url : undefined;
 
   return {
@@ -12,6 +12,7 @@ export function submissionToNotice(submission: Submission, keywords: string[] = 
     authorUrl: `https://www.reddit.com/user/${submission.author.name}`,
     imageUrl,
     raw: JSON.stringify(submission),
-    keywords,
+    sourceName,
+    keywords: [],
   };
 }

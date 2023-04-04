@@ -22,6 +22,7 @@ model Notice {
   keywords    Keyword[]
   source      Source  @relation(fields: [sourceId], references: [id])
   sourceId    String
+  raw         String
 }
 
 model Keyword {
@@ -35,7 +36,7 @@ model Keyword {
 
 model Source {
   id         String   @id @default(uuid())
-  name       String
+  name       String   @unique
   description String? @default("")
   notices    Notice[]
   

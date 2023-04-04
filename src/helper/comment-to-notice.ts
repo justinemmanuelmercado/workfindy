@@ -1,7 +1,7 @@
 import { Comment } from 'snoowrap';
 import { Notice } from '../abstract/Notice';
 
-export async function commentToNotice(comment: Comment, keywords: string[] = []): Promise<Notice> {
+export async function commentToNotice(comment: Comment, sourceName: string): Promise<Notice> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (comment.author.icon_img.then) {
@@ -16,6 +16,7 @@ export async function commentToNotice(comment: Comment, keywords: string[] = [])
     authorUrl: `https://www.reddit.com/user/${comment.author.name}`,
     imageUrl: comment.author.icon_img,
     raw: JSON.stringify(comment),
-    keywords,
+    sourceName,
+    keywords: [],
   };
 }
