@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "db-up": "docker-compose -f db/docker-compose.yml up -d",
     "debug": "nodemon -w lib -w src/index.ts --inspect=0.0.0.0 src/index.ts",
     "dev": "nodemon src/index.ts",
     "dev:debug": "nodemon --inspect src/index.ts",

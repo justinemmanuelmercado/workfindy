@@ -17,6 +17,7 @@ async function main() {
   ]);
   const filteredChannels = discordChannels.filter((d) => d !== null) as Channel[];
   filteredChannels.push(new ConsoleChannel());
+  filteredChannels.push(DatabaseChannelFactory.createDatabaseChannel());
 
   const remoteJsWatcher = RedditWatcherFactory.createRemoteJsWatcher(filteredChannels);
   const forHireWatcher = RedditWatcherFactory.createForHireWatcher(filteredChannels);
@@ -31,7 +32,6 @@ async function test() {
   const channels = await Promise.all([DiscordChannelFactory.createTestDiscordChannel().setChannel()]);
   const filtered = channels.filter((d) => d !== null) as Channel[];
   filtered.push(new ConsoleChannel());
-  filtered.push(DatabaseChannelFactory.createDatabaseChannel());
   const testWatcher = RedditWatcherFactory.createTestWatcher(filtered);
   testWatcher.listen();
   console.log('STARTED: ', new Date().toLocaleString());
@@ -40,5 +40,6 @@ async function test() {
 main()
   .catch((e) => console.error(e))
   .finally(async () => {
+    console.log('DISCONNECTING: ' + new Date().toLocaleString());
     await prisma.$disconnect();
   });
