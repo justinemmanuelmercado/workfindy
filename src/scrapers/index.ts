@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config();
 
-import { RedditWatcherFactory } from './watcher/reddit/RedditWatcher';
+import { RedditWatcherFactory } from './reddit/RedditWatcher';
 import { connectDiscordClient, DiscordChannelFactory } from './channel/discord/DiscordChannel';
 import { ConsoleChannel } from './channel/ConsoleChannel';
 import { Channel } from './abstract/Channel';
@@ -29,6 +29,7 @@ async function main() {
 
 async function test() {
   console.log('STARTING TEST: ' + new Date().toLocaleString());
+  await connectDiscordClient();
   const channels = await Promise.all([DiscordChannelFactory.createTestDiscordChannel().setChannel()]);
   const filtered = channels.filter((d) => d !== null) as Channel[];
   filtered.push(new ConsoleChannel());
@@ -37,7 +38,7 @@ async function test() {
   console.log('STARTED: ', new Date().toLocaleString());
 }
 
-main()
+test()
   .catch((e) => console.error(e))
   .finally(async () => {
     console.log('DISCONNECTING: ' + new Date().toLocaleString());

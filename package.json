@@ -6,9 +6,9 @@
   "scripts": {
     "test": "jest",
     "db-up": "docker-compose -f db/docker-compose.yml up -d",
-    "debug": "nodemon -w lib -w src/index.ts --inspect=0.0.0.0 src/index.ts",
-    "dev": "nodemon src/index.ts",
-    "dev:debug": "nodemon --inspect src/index.ts",
+    "debug": "nodemon -w lib -w src/scrapers/index.ts --inspect=0.0.0.0 src/scrapers/index.ts",
+    "dev": "nodemon src/scrapers/index.ts",
+    "dev:debug": "nodemon --inspect src/scrapers/index.ts",
     "lint": "eslint . --ext .ts",
     "prettify": "prettier --write .",
     "ci-build": "npx tsc",

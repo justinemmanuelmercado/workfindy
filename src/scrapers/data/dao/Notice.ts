@@ -1,4 +1,3 @@
-import { Notice as PrismaNotice, Source as PrismaSource, Keyword as PrismaKeyword } from '@prisma/client';
 import { Notice } from '../../abstract/Notice';
 import { prisma } from '../prisma-client';
 
