@@ -12,7 +12,12 @@
     "lint": "eslint . --ext .ts",
     "prettify": "prettier --write .",
     "ci-build": "npx tsc",
-    "start": "pm2 start dist/index.js --name \"ph-dev\" --log-date-format \"YYYY-MM-DD HH:mm Z\" --log /var/log/ph-dev/pm2.log --error /var/log/ph-dev/pm2-error.log --output /var/log/ph-dev/pm2-output.log --watch"
+    "start": "pm2 start dist/index.js --name \"ph-dev\" --log-date-format \"YYYY-MM-DD HH:mm Z\" --log /var/log/ph-dev/pm2.log --error /var/log/ph-dev/pm2-error.log --output /var/log/ph-dev/pm2-output.log",
+    "astro:dev": "astro dev",
+    "astro:start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +41,7 @@
     "typescript": "^5.0.3"
   },
   "dependencies": {
+    "astro": "^2.3.0",
     "@prisma/client": "^4.12.0",
     "discord.js": "^14.8.0",
     "dotenv": "^16.0.3",

@@ -9,8 +9,13 @@
       "request": "attach",
       "name": "Launch PH-Dev",
       "processId": "${command:PickProcess}",
-      "restart": true,
-      "protocol": "inspector"
+      "restart": true
+    },
+    {
+      "command": "./node_modules/.bin/astro dev",
+      "name": "Development server",
+      "request": "launch",
+      "type": "node-terminal"
     }
   ]
 }
