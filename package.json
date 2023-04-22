@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts",
     "prettify": "prettier --write .",
     "ci-build": "npx tsc",
-    "start": "pm2 start dist/index.js --name \"ph-dev\" --log-date-format \"YYYY-MM-DD HH:mm Z\" --log /var/log/ph-dev/pm2.log --error /var/log/ph-dev/pm2-error.log --output /var/log/ph-dev/pm2-output.log --rotate-interval \"0 0 * * 0\" --max-size \"10M\" --retain 7 --watch"
+    "start": "pm2 start dist/index.js --name \"ph-dev\" --log-date-format \"YYYY-MM-DD HH:mm Z\" --log /var/log/ph-dev/pm2.log --error /var/log/ph-dev/pm2-error.log --output /var/log/ph-dev/pm2-output.log --watch"
   },
   "author": "",
   "license": "ISC",
