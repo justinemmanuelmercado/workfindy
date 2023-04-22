@@ -38,9 +38,4 @@ async function test() {
   console.log('STARTED: ', new Date().toLocaleString());
 }
 
-main()
-  .catch((e) => console.error(e))
-  .finally(async () => {
-    console.log('DISCONNECTING: ' + new Date().toLocaleString());
-    await prisma.$disconnect();
-  });
+main().catch((e) => console.error(e));
