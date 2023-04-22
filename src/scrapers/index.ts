@@ -38,7 +38,7 @@ async function test() {
   console.log('STARTED: ', new Date().toLocaleString());
 }
 
-test()
+main()
   .catch((e) => console.error(e))
   .finally(async () => {
     console.log('DISCONNECTING: ' + new Date().toLocaleString());
