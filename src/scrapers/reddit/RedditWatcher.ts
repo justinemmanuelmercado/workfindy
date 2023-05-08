@@ -1,7 +1,8 @@
 import { CommentStream, SubmissionStream } from 'snoostorm';
-import Snoowrap, { Comment, Submission } from 'snoowrap';
-import { Channel } from '../abstract/Channel';
-import { Notice } from '../abstract/Notice';
+import type Snoowrap from 'snoowrap';
+import type { Comment, Submission } from 'snoowrap';
+import type { Channel } from '../abstract/Channel';
+import type { Notice } from '../abstract/Notice';
 import { commentToNotice } from '../helper/comment-to-notice';
 import { submissionToNotice } from '../helper/post-to-notice';
 import { snoowrapClient } from './snoowrap';

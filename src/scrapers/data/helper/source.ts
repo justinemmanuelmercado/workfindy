@@ -1,4 +1,4 @@
-import { Source } from '@prisma/client';
+import type { Source } from '@prisma/client';
 import { prisma } from '../prisma-client';
 
 const sourceCache = new Map<string, Source>();

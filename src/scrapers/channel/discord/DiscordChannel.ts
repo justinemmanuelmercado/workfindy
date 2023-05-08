@@ -1,6 +1,6 @@
 import { TextChannel, EmbedBuilder, Client, GatewayIntentBits } from 'discord.js';
 import { Channel, ChannelConfig } from '../../abstract/Channel';
-import { Notice } from '../../abstract/Notice';
+import type { Notice } from '../../abstract/Notice';
 import { matchingWords } from '../../helper/matching-words';
 import { truncateString } from '../../helper/truncate-string';
 export let discordClient: Client;

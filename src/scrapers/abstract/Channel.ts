@@ -1,4 +1,4 @@
-import { Notice } from './Notice';
+import type { Notice } from './Notice';
 
 export type ChannelConfig = {
   name: string;

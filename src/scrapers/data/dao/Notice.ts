@@ -1,4 +1,4 @@
-import { Notice } from '../../abstract/Notice';
+import type { Notice } from '../../abstract/Notice';
 import { prisma } from '../prisma-client';
 
 interface Keyword {
@@ -41,4 +41,5 @@ class NoticeDAO {
   // }
 }
 
-export { NoticeDAO, Notice, Keyword, Source };
+export { NoticeDAO, Notice };
+export type { Keyword, Source };

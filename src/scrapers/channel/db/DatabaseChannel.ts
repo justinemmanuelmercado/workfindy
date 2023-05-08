@@ -1,5 +1,5 @@
 import { Channel, ChannelConfig } from '../../abstract/Channel';
-import { Notice } from '../../abstract/Notice';
+import type { Notice } from '../../abstract/Notice';
 import { createNotice } from '../../data/helper/notice';
 
 interface DatabaseChannelConfig extends ChannelConfig {

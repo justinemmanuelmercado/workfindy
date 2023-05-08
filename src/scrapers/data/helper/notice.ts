@@ -1,4 +1,4 @@
-import { Notice } from '../../abstract/Notice';
+import type { Notice } from '../../abstract/Notice';
 import { NoticeDAO } from '../dao/Notice';
 import { getSource } from './source';
 import omit from 'lodash/omit';

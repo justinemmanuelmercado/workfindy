@@ -1,5 +1,5 @@
-import { Comment } from 'snoowrap';
-import { Notice } from '../abstract/Notice';
+import type { Comment } from 'snoowrap';
+import type { Notice } from '../abstract/Notice';
 
 export async function commentToNotice(comment: Comment, sourceName: string): Promise<Notice> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

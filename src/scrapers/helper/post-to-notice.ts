@@ -1,5 +1,5 @@
-import { Submission } from 'snoowrap';
-import { Notice } from '../abstract/Notice';
+import type { Submission } from 'snoowrap';
+import type { Notice } from '../abstract/Notice';
 
 export function submissionToNotice(submission: Submission, sourceName: string): Notice {
   const imageUrl = submission.preview?.enabled ? submission.preview.images[0].source.url : undefined;

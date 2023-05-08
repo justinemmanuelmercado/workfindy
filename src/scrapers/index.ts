@@ -4,9 +4,8 @@ config();
 import { RedditWatcherFactory } from './reddit/RedditWatcher';
 import { connectDiscordClient, DiscordChannelFactory } from './channel/discord/DiscordChannel';
 import { ConsoleChannel } from './channel/ConsoleChannel';
-import { Channel } from './abstract/Channel';
+import type { Channel } from './abstract/Channel';
 import { DatabaseChannelFactory } from './channel/db/DatabaseChannel';
-import { prisma } from './data/prisma-client';
 
 async function main() {
   console.log('STARTING: ' + new Date().toLocaleString());
