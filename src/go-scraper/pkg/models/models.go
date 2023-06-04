@@ -5,43 +5,32 @@ import (
 )
 
 type Notice struct {
-	ID         string    `gorm:"type:uuid;default:uuid_generate_v4()" gorm:"column:id"`
-	Title      string    `gorm:"column:title"`
-	Body       string    `gorm:"column:body"`
-	URL        string    `gorm:"column:url"`
-	AuthorName string    `gorm:"column:authorName"`
-	AuthorURL  string    `gorm:"column:authorUrl"`
-	ImageURL   *string   `gorm:"column:imageUrl"`
-	CreatedAt  time.Time `gorm:"column:createdAt"`
-	UpdatedAt  time.Time `gorm:"column:updatedAt"`
-	SourceID   string    `gorm:"column:sourceId"`
-	Source     Source    `gorm:"foreignKey:SourceID"`
-	Raw        string    `gorm:"column:raw"`
-}
-
-func (Notice) TableName() string {
-	return "Notice"
+	ID         string
+	Title      string
+	Body       string
+	URL        string
+	AuthorName string
+	AuthorURL  string
+	ImageURL   *string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	SourceID   string
+	Source     Source
+	Raw        string
+	Guid       *string
 }
 
 type Keyword struct {
-	ID        string    `gorm:"type:uuid;default:uuid_generate_v4()" gorm:"column:id"`
-	Value     string    `gorm:"unique" gorm:"column:value"`
-	CreatedAt time.Time `gorm:"column:createdAt"`
-	UpdatedAt time.Time `gorm:"column:updatedAt"`
-}
-
-func (Keyword) TableName() string {
-	return "Keyword"
+	ID        string
+	Value     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Source struct {
-	ID          string    `gorm:"type:uuid;default:uuid_generate_v4()" gorm:"column:id"`
-	Name        string    `gorm:"unique" gorm:"column:name"`
-	Description *string   `gorm:"column:description"`
-	CreatedAt   time.Time `gorm:"column:createdAt"`
-	UpdatedAt   time.Time `gorm:"column:updatedAt"`
-}
-
-func (Source) TableName() string {
-	return "Source"
+	ID          string
+	Name        string
+	Description *string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }

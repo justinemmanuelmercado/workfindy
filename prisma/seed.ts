@@ -4,15 +4,31 @@ const db = new PrismaClient();
 
 const sources = [
   {
-    name: 'Reddit - For Hire',
+    name: 'Reddit',
     description: '',
   },
   {
-    name: 'Reddit - RemoteJs',
+    name: 'WeWorkRemotely',
     description: '',
   },
   {
-    name: 'Reddit - Test',
+    name: 'Remotive',
+    description: '',
+  },
+  {
+    name: 'RemoteOK',
+    description: '',
+  },
+  {
+    name: 'JobIcy',
+    description: '',
+  },
+  {
+    name: 'StackOverflow',
+    description: '',
+  },
+  {
+    name: 'HackerNews',
     description: '',
   },
 ];

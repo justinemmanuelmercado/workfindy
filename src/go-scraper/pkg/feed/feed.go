@@ -8,6 +8,7 @@ type Item struct {
 	Title       string
 	Description string
 	Link        string
+	Guid        string
 	Author      *gofeed.Person
 	Image       *gofeed.Image
 }
@@ -27,6 +28,7 @@ func FetchFeed(url string) ([]Item, error) {
 			Link:        item.Link,
 			Description: item.Description,
 			Image:       item.Image,
+			Guid:        item.GUID,
 		}
 
 		if len(item.Authors) > 0 {

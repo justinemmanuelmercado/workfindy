@@ -75,7 +75,6 @@ class RedditWatcherFactory {
     forHireWatcher.commentFilter = (): boolean => {
       return false;
     };
-    forHireWatcher.name = 'Reddit - For Hire';
     return forHireWatcher;
   }
   static createRemoteJsWatcher(channels: Channel[]) {
@@ -86,12 +85,10 @@ class RedditWatcherFactory {
     remoteJsWatcher.commentFilter = (): boolean => {
       return false;
     };
-    remoteJsWatcher.name = 'Reddit - RemoteJs';
     return remoteJsWatcher;
   }
   static createTestWatcher(channels: Channel[]) {
     const testWatcher = new RedditWatcher(channels, 'testingground4bots');
-    testWatcher.name = 'Reddit - Test';
     return testWatcher;
   }
 }

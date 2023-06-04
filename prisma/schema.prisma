@@ -11,6 +11,7 @@ generator client {
 
 model Notice {
   id          String  @id @default(uuid())
+  guid        String?  @unique @default(uuid())
   title       String
   body        String
   url         String
