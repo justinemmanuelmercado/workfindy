@@ -1,4 +1,4 @@
-import { Channel } from '../abstract/Channel';
+import type { Channel } from '../abstract/Channel';
 import { ConsoleChannel } from './ConsoleChannel';
 import { getDiscordChannels } from './discord';
 

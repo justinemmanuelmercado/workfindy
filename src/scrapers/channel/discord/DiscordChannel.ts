@@ -101,7 +101,6 @@ export class DiscordChannel extends Channel {
       await this.channel?.send({ embeds: [messageEmbed] });
     } catch (e) {
       console.log(`[ERROR] Can't send message to channel: ${this.config.name}`);
-      console.log(notice);
       console.log(e);
     }
   };
