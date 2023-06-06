@@ -7,6 +7,8 @@ export interface Notice {
   authorUrl: string;
   raw: string;
   sourceName: string;
+  publishedDate?: Date;
+  guid?: string;
 
   imageUrl?: string;
   keywords?: string[];

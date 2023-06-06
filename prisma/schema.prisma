@@ -1,46 +1,45 @@
-// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Notice {
-  id          String  @id @default(uuid())
-  guid        String?  @unique @default(uuid())
-  title       String
-  body        String
-  url         String
-  authorName  String
-  authorUrl   String
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  keywords    Keyword[]
-  source      Source  @relation(fields: [sourceId], references: [id])
-  sourceId    String
-  raw         String
+  id            String    @id @default(uuid())
+  title         String
+  body          String
+  url           String
+  authorName    String
+  authorUrl     String
+  imageUrl      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+  sourceId      String
+  raw           String
+  guid          String?
+  publishedDate DateTime?
+  source        Source    @relation(fields: [sourceId], references: [id])
+  keywords      Keyword[] @relation("KeywordToNotice")
+
+  @@unique([guid, sourceId])
 }
 
 model Keyword {
-  id         String   @id @default(uuid())
-  value      String   @unique
-  notices    Notice[]
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  value     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  notices   Notice[] @relation("KeywordToNotice")
 }
 
 model Source {
-  id         String   @id @default(uuid())
-  name       String   @unique
-  description String? @default("")
-  notices    Notice[]
-  
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?  @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  notices     Notice[]
 }

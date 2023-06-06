@@ -16,7 +16,9 @@ export async function commentToNotice(comment: Comment, sourceName: string): Pro
     authorUrl: `https://www.reddit.com/user/${comment.author.name}`,
     imageUrl: comment.author.icon_img,
     raw: JSON.stringify(comment),
+    publishedDate: new Date(comment.created_utc * 1000),
     sourceName,
     keywords: [],
+    guid: comment.id,
   };
 }

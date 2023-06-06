@@ -15,9 +15,8 @@ type Notice struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	SourceID   string
-	Source     Source
 	Raw        string
-	Guid       *string
+	Guid       string
 }
 
 type Keyword struct {

@@ -12,7 +12,9 @@ export function submissionToNotice(submission: Submission, sourceName: string): 
     authorUrl: `https://www.reddit.com/user/${submission.author.name}`,
     imageUrl,
     raw: JSON.stringify(submission),
+    publishedDate: new Date(submission.created_utc * 1000),
     sourceName,
     keywords: [],
+    guid: submission.id,
   };
 }

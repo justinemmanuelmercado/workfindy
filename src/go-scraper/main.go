@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	"github.com/justinemmanuelmercado/go-scraper/pkg/rss_feed"
 	"github.com/justinemmanuelmercado/go-scraper/pkg/store"
 	"log"
 	"os"
@@ -26,49 +27,18 @@ func main() {
 		log.Fatalf("Error connecting to database: %v\n", err)
 	}
 
-	newStore := store.NewStore(db)
+	sourceStore := store.InitSource(db)
 
-	notice, err := newStore.GetNotice("04ddaadf-8c4b-4371-a085-38ed57cf0468")
+	newNotices, err := rss_feed.GetAllNotices(sourceStore)
 	if err != nil {
-		log.Fatalf("Error: %v\n", err)
+		log.Fatalf("Error getting Notices from RSS feeds: %v\n", err)
 	}
 
-	log.Print(notice)
+	noticeStore := store.InitNotice(db)
 
-	//items, err := feed.FetchWwr()
-	//if err != nil {
-	//	log.Fatalf("error getting feed: ")
-	//}
-	//
-	//for _, item := range items {
-	//	jsonData, err := json.Marshal(item)
-	//	if err != nil {
-	//		log.Fatalf("error saving feed: ")
-	//	}
-	//	id, err := uuid.NewRandom()
-	//	if err != nil {
-	//		log.Fatalf("error generating uuid: %v")
-	//	}
-	//	notice := models.Notice{
-	//		ID:        id.String(),
-	//		Title:     item.Title,
-	//		Body:      item.Description,
-	//		URL:       item.Link,
-	//		CreatedAt: time.Time{},
-	//		UpdatedAt: time.Time{},
-	//		SourceID:  feed.WwrSourceId,
-	//		Raw:       string(jsonData),
-	//	}
-	//
-	//	if item.Author != nil {
-	//		notice.AuthorName = item.Author.Name
-	//		notice.AuthorURL = item.Author.Email
-	//	}
-	//
-	//	if item.Image != nil {
-	//		notice.ImageURL = &item.Image.URL
-	//	}
-	//
-	//	db.Create(&notice)
-	//}
+	err = noticeStore.CreateNotices(newNotices)
+	if err != nil {
+		log.Fatalf("Error creating notices: %v\n", err)
+	}
+
 }
