@@ -14,35 +14,10 @@ func InitNotice(conn *pgx.Conn) *Notice {
 	return &Notice{conn: conn}
 }
 
-func (n *Notice) CreateNotice(notice *models.Notice) error {
-	query := `
-	INSERT INTO "Notice" (id, title, body, url, "authorName", "authorUrl", "imageUrl", "sourceId", raw, guid)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
-
-	_, err := n.conn.Exec(
-		context.Background(),
-		query,
-		notice.ID,
-		notice.Title,
-		notice.Body,
-		notice.URL,
-		notice.AuthorName,
-		notice.AuthorURL,
-		notice.ImageURL,
-		notice.SourceID,
-		notice.Raw,
-		notice.Guid,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (n *Notice) CreateNotices(notices []*models.Notice) error {
 	query := `
-	INSERT INTO "Notice" (id, title, body, url, "authorName", "authorUrl", "imageUrl", "sourceId", raw, guid)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+	INSERT INTO "Notice" (id, title, body, url, "authorName", "authorUrl", "imageUrl", "sourceId", raw, guid, "publishedDate")
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	ON CONFLICT (guid, "sourceId") DO NOTHING`
 
 	batch := &pgx.Batch{}
@@ -60,6 +35,7 @@ func (n *Notice) CreateNotices(notices []*models.Notice) error {
 			notice.SourceID,
 			notice.Raw,
 			notice.Guid,
+			notice.PublishedDate,
 		)
 	}
 

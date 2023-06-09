@@ -5,18 +5,19 @@ import (
 )
 
 type Notice struct {
-	ID         string
-	Title      string
-	Body       string
-	URL        string
-	AuthorName string
-	AuthorURL  string
-	ImageURL   *string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	SourceID   string
-	Raw        string
-	Guid       string
+	ID            string
+	Title         string
+	Body          string
+	URL           string
+	AuthorName    string
+	AuthorURL     string
+	ImageURL      *string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	SourceID      string
+	Raw           string
+	Guid          string
+	PublishedDate *time.Time
 }
 
 type Keyword struct {

@@ -7,6 +7,7 @@ import (
 	"github.com/justinemmanuelmercado/go-scraper/pkg/models"
 	"github.com/justinemmanuelmercado/go-scraper/pkg/store"
 	"github.com/mmcdole/gofeed"
+	"sync"
 )
 
 type RssFeed struct {
@@ -35,13 +36,14 @@ func NoticesFromFeedItems(items []*gofeed.Item, sourceId string) []*models.Notic
 		}
 
 		newNotice := &models.Notice{
-			ID:       uuid.New().String(),
-			Title:    item.Title,
-			Body:     item.Description,
-			URL:      item.Link,
-			SourceID: sourceId,
-			Raw:      string(jsonData),
-			Guid:     item.GUID,
+			ID:            uuid.New().String(),
+			Title:         item.Title,
+			Body:          item.Description,
+			URL:           item.Link,
+			SourceID:      sourceId,
+			Raw:           string(jsonData),
+			Guid:          item.GUID,
+			PublishedDate: item.PublishedParsed,
 		}
 
 		if item.Image != nil {
@@ -60,29 +62,53 @@ func NoticesFromFeedItems(items []*gofeed.Item, sourceId string) []*models.Notic
 }
 
 func GetAllNotices(source *store.Source) ([]*models.Notice, error) {
-	handleFeed := func(feedFunc func() *RssFeed) ([]*models.Notice, error) {
+	var feedFuncs = []func() *RssFeed{
+		GetWwrFeed,
+		GetRemotiveFeed,
+		GetJobIcyFeed,
+	}
+
+	var wg sync.WaitGroup
+	noticesCh := make(chan []*models.Notice, len(feedFuncs))
+	errCh := make(chan error, len(feedFuncs))
+
+	handleFeed := func(feedFunc func() *RssFeed) {
+		defer wg.Done()
+
 		feed := feedFunc()
 		items, err := feed.FetchItems()
 		if err != nil {
-			return nil, fmt.Errorf("failed to fetch %s: %w", feed.sourceName, err)
+			errCh <- fmt.Errorf("failed to fetch %s: %w", feed.sourceName, err)
+			return
 		}
 
 		sourceItem, err := source.GetSourceByName(feed.sourceName)
 		if err != nil {
-			return nil, fmt.Errorf("failed to fetch %s source id: %w", feed.sourceName, err)
+			errCh <- fmt.Errorf("failed to fetch %s source id: %w", feed.sourceName, err)
+			return
 		}
-		return NoticesFromFeedItems(items, sourceItem.ID), nil
+		noticesCh <- NoticesFromFeedItems(items, sourceItem.ID)
 	}
 
-	wwrNotices, err := handleFeed(GetWwrFeed)
-	if err != nil {
-		return nil, err
+	wg.Add(len(feedFuncs))
+
+	for _, feedFunc := range feedFuncs {
+		go handleFeed(feedFunc)
 	}
 
-	remotiveNotices, err := handleFeed(GetRemotiveFeed)
-	if err != nil {
-		return nil, err
+	wg.Wait()
+
+	close(noticesCh)
+	close(errCh)
+
+	if len(errCh) > 0 {
+		return nil, <-errCh
 	}
 
-	return append(remotiveNotices, wwrNotices...), nil
+	var allNotices []*models.Notice
+	for notices := range noticesCh {
+		allNotices = append(allNotices, notices...)
+	}
+
+	return allNotices, nil
 }

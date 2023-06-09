@@ -41,4 +41,6 @@ func main() {
 		log.Fatalf("Error creating notices: %v\n", err)
 	}
 
+	log.Println("Script run successfully")
+
 }
