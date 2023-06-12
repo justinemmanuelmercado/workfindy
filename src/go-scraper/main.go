@@ -10,12 +10,14 @@ import (
 )
 
 func loadEnvFile() {
-	root, err := os.Getwd()
+	executablePath, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	path := filepath.Join(root, "../..", ".env")
+	executableDir := filepath.Dir(executablePath)
+
+	path := filepath.Join(executableDir, "../..", ".env")
 	err = godotenv.Load(path)
 }
 
