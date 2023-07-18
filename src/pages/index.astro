@@ -9,45 +9,40 @@ const notices = await prisma.notice.findMany({
   orderBy: {
     createdAt: 'desc',
   },
+  include: {
+    source: true,
+  },
   take: 5,
 });
 ---
 
 <Layout title="Welcome to Astro.">
-  <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center my-48">
-    <div>
-      <h1 class="text-4xl font-bold mb-4">Crowdsourcing Remote Jobs</h1>
-      <p class="mb-6">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Lorem ipsum dolor
-        sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Integer nec odio. Praesent libero.Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Integer nec odio. Praesent libero.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.
-        Praesent libero.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-      </p>
-      <button class="p-4 bg-primary-50 rounded text-xl font-bold hover:bg-primary-100 hover:text-neutral-200"
-        >See Listings</button
-      >
-    </div>
-  </section>
-  <section class="my-12">
-    <div class="flex flex-col w-full border-neutral-800 border rounded-xl">
+  <section>
+    <h1 class="text-6xl font-bold">Newest Listings</h1>
+    <div class="flex flex-col w-full border-neutral-800 border rounded-xl mt-10 min-w-[320px] overflow-x-auto">
       <div class="flex text-sm font-semibold bg-gray-100 rounded-t-xl p-4">
         <div class="flex-1 p-2 font-bold">Title</div>
         <div class="flex-1 p-2 font-bold">Description</div>
-        <div class="flex-1 p-2 font-bold">Rate</div>
+        <div class="flex-1 p-2 font-bold">From</div>
+        <div class="flex-1 p-2 font-bold">Apply</div>
       </div>
-      {
-        notices.map((notice, i) => {
-          const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
-          return (
-            <div class={`flex border-t border-t-neutral-950 p-4 rounded-b-xl ${bg}`}>
-              <div class="flex-1 p-2 font-bold">{notice.title}</div>
-              <div class="flex-1 p-2 font-li">{truncate(notice.body, { length: 75 })}</div>
-              <div class="flex-1 p-2">$20/hr</div>
-            </div>
-          );
-        })
-      }
+      <span class="overflow-y-auto h-[60vh]">
+        {
+          notices.map((notice, i) => {
+            const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
+            return (
+              <div class={`flex border-t border-t-neutral-950 p-4 rounded-b-xl ${bg}`}>
+                <div class="flex-1 p-2 font-bold">{notice.title}</div>
+                <div class="flex-1 p-2 font-li">{truncate(notice.body, { length: 75 })}</div>
+                <div class="flex-1 p-2 font-li">{notice.source.name}</div>
+                <div class="flex-1 p-2 font-li">
+                  <a href={notice.url}>Apply</a>
+                </div>
+              </div>
+            );
+          })
+        }
+      </span>
     </div>
-    </section>
+  </section>
 </Layout>
