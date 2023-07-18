@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
+	"github.com/justinemmanuelmercado/go-scraper/pkg/discord"
 	"github.com/justinemmanuelmercado/go-scraper/pkg/models"
 	"github.com/justinemmanuelmercado/go-scraper/pkg/reddit"
 	"github.com/justinemmanuelmercado/go-scraper/pkg/rss_feed"
@@ -80,6 +81,10 @@ func main() {
 		log.Fatalf("Error creating notices: %v\n", err)
 	}
 
+	err = discord.SendNotification(fmt.Sprintf("Succesfully run script with %d notices matched", len(allNotices)))
+	if err != nil {
+		log.Println("Discord notification not sent")
+	}
 	log.Println("Script run successfully")
 
 }
