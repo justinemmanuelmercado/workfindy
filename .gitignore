@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 # JetBrains IDEs
 .idea
+
+# db data
+data
