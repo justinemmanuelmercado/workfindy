@@ -4,6 +4,7 @@
 2. Install docker
 3. Install docker-compose
 4. Fill in these environment variables in a .env file in the root of the project
+
 ```
 POSTGRES_PASSWORD=
 POSTGRES_USER=
