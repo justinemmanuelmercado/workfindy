@@ -23,3 +23,15 @@ jobs:
         context: .
         push: true
         tags: ejmercado/wemeowt:latest
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USERNAME }}
+        key: ${{ secrets.DROPLET_PRIVATE_KEY }}
+        port: ${{ secrets.DROPLET_PORT }}
+        script: |
+          cd /root/projects/ph-dev
+          docker-compose pull web
+          docker-compose up -d web
