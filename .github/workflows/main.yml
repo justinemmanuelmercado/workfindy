@@ -33,5 +33,6 @@ jobs:
         port: ${{ secrets.DROPLET_PORT }}
         script: |
           cd /root/projects/ph-dev
+          git pull
           docker-compose pull web
           docker-compose up -d web
