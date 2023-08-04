@@ -1,13 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { PrismaClient } from '@prisma/client';
-import { truncate } from 'lodash';
+import { prisma, timeAgo } from '../common';
+import _ from 'lodash';
 import { decode } from 'html-entities';
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
+
+const { truncate } = _;
 
 const limit = 10;
-const prisma = new PrismaClient();
 const noticesCount = await prisma.notice.count();
 const page = parseInt(Astro.url.searchParams.get('page') || '1');
 const numberOfPages = Math.ceil(noticesCount / limit);
@@ -41,8 +40,6 @@ const printToHtmlAndTruncate = (text: string, length: number) => {
   // Double encoding because of stupid strings from reddit like this I&amp;#39;m
   return truncate(decode(html), { length, separator: '...' });
 };
-TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo('en-US');
 
 const toRelativeDate = (date: Date | null) => {
   if (!date) {
@@ -52,7 +49,7 @@ const toRelativeDate = (date: Date | null) => {
 };
 ---
 
-<Layout title="Welcome to Astro." with:solid-js>
+<Layout title="Welcome to Astro.">
   <section>
     <div class="flex flex-col py-5 sm:py-10 items-center">
       <h1 class="text-2xl sm:text-6xl font-bold">Find Freedom in Your Career</h1>

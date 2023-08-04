@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../common';
 import { decode } from 'html-entities';
 
 const { uuid } = Astro.params;
-const prisma = new PrismaClient();
 const notice = await prisma.notice.findUnique({
   where: {
     id: uuid,
@@ -44,4 +43,4 @@ if (notice?.source.name === 'Reddit') {
       <article class="prose prose-invert md:prose-lg lg:prose-xl" set:html={notice.body} />
     </main>
   </div>
-</Layout>
+</Layout>../common
