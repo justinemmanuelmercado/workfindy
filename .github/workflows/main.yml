@@ -35,4 +35,4 @@ jobs:
           cd /root/projects/ph-dev
           git pull
           docker-compose pull web
-          docker-compose up -d web --build
+          docker-compose up -d --build web
