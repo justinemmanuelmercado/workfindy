@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PrismaClient } from '@prisma/client';
+import { decode } from 'html-entities';
+
+const { uuid } = Astro.params;
+const prisma = new PrismaClient();
+const notice = await prisma.notice.findUnique({
+  where: {
+    id: uuid,
+  },
+  include: {
+    source: true,
+  },
+});
+
+if (!notice) {
+  return Astro.redirect('/404');
+}
+
+if (notice?.source.name === 'Reddit') {
+  // If notice.ID is cached - set notice.body = cached value
+  notice.body = decode(notice.body, { level: 'html5' });
+  // If notice.ID is not cached - fetch from Reddit and set notice.body = fetched value
+}
+---
+
+<Layout title={notice.title || 'Job Title'}>
+  <div class="p-1 sm:p-2">
+    <div class="p-4 rounded-xl">
+      <h1 class="text-3xl font-bold">{notice.title}</h1>
+      <h2>{notice.source.name}</h2>
+    </div>
+    <div class="flex justify-end flex-col sm:flex-row space-x-0 space-y-2 sm:space-y-0 sm:space-x-4">
+      <a class="block" href={notice.url}>
+        <button
+          class="border border-primary-200 rounded-xl py-2 px-8 sm:px-5 w-full sm:w-fit font-bold text-primary-200"
+        >
+          Apply
+        </button>
+      </a>
+    </div>
+    <main class="bg-gray-300 border border-neutral-900 rounded-xl px-4 my-4">
+      <article class="prose prose-invert md:prose-lg lg:prose-xl" set:html={notice.body} />
+    </main>
+  </div>
+</Layout>

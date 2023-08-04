@@ -1,8 +1,17 @@
 {
   "compilerOptions": {
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
   },
-  "include": ["src/**/*", "env.d.ts", "DEPRECATED_scrapers"],
-  "exclude": ["node_modules", "**/*.test.ts"],
+  "include": [
+    "src/**/*",
+    "env.d.ts",
+    "DEPRECATED_scrapers"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ],
   "extends": "astro/tsconfigs/strict"
 }

@@ -2,47 +2,144 @@
 import Layout from '../layouts/Layout.astro';
 import { PrismaClient } from '@prisma/client';
 import { truncate } from 'lodash';
+import { decode } from 'html-entities';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 
+const limit = 10;
 const prisma = new PrismaClient();
-
+const noticesCount = await prisma.notice.count();
+const page = parseInt(Astro.url.searchParams.get('page') || '1');
+const numberOfPages = Math.ceil(noticesCount / limit);
+let startPage = Math.max(1, page - 2);
+let endPage = Math.min(numberOfPages, page + 2);
+let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 const notices = await prisma.notice.findMany({
-  orderBy: {
-    createdAt: 'desc',
-  },
+  orderBy: [
+    {
+      publishedDate: 'desc',
+    },
+    {
+      title: 'desc',
+    },
+  ],
   include: {
     source: true,
   },
-  take: 5,
+  take: limit,
+  skip: page ? (page - 1) * limit : 0,
 });
+
+const sources = await prisma.source.findMany();
+
+// Removes html tags and escaped html tags
+const printToHtmlAndTruncate = (text: string, length: number) => {
+  // If id is in cache return it
+  const htmlString = decode(text, { level: 'html5' });
+  const html = htmlString.replace(/<[^>]*>?/gm, '');
+  // Set cache for notice here
+  // Double encoding because of stupid strings from reddit like this I&amp;#39;m
+  return truncate(decode(html), { length, separator: '...' });
+};
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo('en-US');
+
+const toRelativeDate = (date: Date | null) => {
+  if (!date) {
+    return 'Unknown';
+  }
+  return timeAgo.format(date);
+};
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="Welcome to Astro." with:solid-js>
   <section>
-    <h1 class="text-6xl font-bold">Newest Listings</h1>
-    <div class="flex flex-col w-full border-neutral-800 border rounded-xl mt-10 min-w-[320px] overflow-x-auto">
-      <div class="flex text-sm font-semibold bg-gray-100 rounded-t-xl p-4">
-        <div class="flex-1 p-2 font-bold">Title</div>
-        <div class="flex-1 p-2 font-bold">Description</div>
-        <div class="flex-1 p-2 font-bold">From</div>
-        <div class="flex-1 p-2 font-bold">Apply</div>
-      </div>
-      <span class="overflow-y-auto h-[60vh]">
+    <div class="flex flex-col py-5 sm:py-10 items-center">
+      <h1 class="text-2xl sm:text-6xl font-bold">Find Freedom in Your Career</h1>
+      <p>Top Remote Jobs, Updated Daily</p>
+    </div>
+    <div class="flex w-full mt-10 min-w-[320px] overflow-x-auto space-x-0 sm:space-x-2">
+      <div class="rounded-xl border hidden sm:block border-neutral-900 p-2">
         {
-          notices.map((notice, i) => {
+          sources.map((source, i) => {
             const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
             return (
-              <div class={`flex border-t border-t-neutral-950 p-4 rounded-b-xl ${bg}`}>
-                <div class="flex-1 p-2 font-bold">{notice.title}</div>
-                <div class="flex-1 p-2 font-li">{truncate(notice.body, { length: 75 })}</div>
-                <div class="flex-1 p-2 font-li">{notice.source.name}</div>
-                <div class="flex-1 p-2 font-li">
-                  <a href={notice.url}>Apply</a>
-                </div>
+              <div class={`flex border border-neutral-950 p-2 rounded-xl ${bg}`}>
+                <div class="p-2 font-bold">{source.name}</div>
               </div>
             );
           })
         }
-      </span>
+
+        <button class="p-2 rounded-xl border border-neutral-950 bg-primary-200">Show All</button>
+      </div>
+      <div class="space-y-4">
+        <div class="overflow-y-auto sm:max-h-[60vh] rounded-xl border border-neutral-900 p-0 sm:px-2 space-y-2">
+          {
+            notices.map((notice, i) => {
+              const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
+              return (
+                <div class={`flex flex-col border border-neutral-950 p-8 rounded-xl ${bg} space-y-2 sm:p-4`}>
+                  <div class="flex">
+                    <p class="text-xs font-extralight rounded-xl border border-neutral-700 px-2">
+                      {notice.source.name}
+                    </p>
+                  </div>
+                  <p class="font-bold">{notice.title}</p>
+                  <p>{printToHtmlAndTruncate(notice.body, 200)}</p>
+                  <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
+                  <div class="flex justify-end flex-col sm:flex-row space-x-0 space-y-2 sm:space-y-0 sm:space-x-4">
+                    <a class="block" href="#">
+                      <button class="border border-neutral-800 rounded-xl py-2 px-8 sm:px-5 w-full sm:w-fit font-bold text-neutral-300">
+                        Generate Cover Letter
+                      </button>
+                    </a>
+                    <a class="block" href={`/${notice.id}`}>
+                      <button class="border border-neutral-800 rounded-xl py-2 px-8 sm:px-5 w-full sm:w-fit font-bold text-neutral-300">
+                        Details
+                      </button>
+                    </a>
+                    <a class="block" href={notice.url}>
+                      <button class="border border-primary-200 rounded-xl py-2 px-8 sm:px-5 w-full sm:w-fit font-bold text-primary-200">
+                        Apply
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+        <div class="flex justify-center items-center space-x-2 w-full">
+          <div class="pagination">
+            <a href={`/?page=1`}>
+              <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
+            </a>
+
+            {startPage > 1 && <span>...</span>}
+
+            {
+              pageNumbers.map((i) => (
+                <a href={`/?page=${i}`}>
+                  <button
+                    class={`border border-neutral-900 rounded-xl px-2 py-1 ${
+                      i === page ? 'bg-primary-200' : 'bg-gray-200'
+                    }`}
+                  >
+                    {i}
+                  </button>
+                </a>
+              ))
+            }
+
+            {endPage < numberOfPages && <span>...</span>}
+
+            <a href={`/?page=${numberOfPages}`}>
+              <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>
