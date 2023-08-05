@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { prisma, timeAgo } from '../common';
+import { buildQueryString, prisma, timeAgo } from '../common';
 import _ from 'lodash';
 import { decode } from 'html-entities';
 
@@ -9,6 +9,8 @@ const { truncate } = _;
 const limit = 10;
 const noticesCount = await prisma.notice.count();
 const page = parseInt(Astro.url.searchParams.get('page') || '1');
+const sourcesQuery = Astro.url.searchParams.getAll('sources[]');
+console.log(sourcesQuery);
 const numberOfPages = Math.ceil(noticesCount / limit);
 let startPage = Math.max(1, page - 2);
 let endPage = Math.min(numberOfPages, page + 2);
@@ -22,6 +24,16 @@ const notices = await prisma.notice.findMany({
       title: 'desc',
     },
   ],
+  where: {
+    source:
+      sourcesQuery.length > 0
+        ? {
+            name: {
+              in: sourcesQuery,
+            },
+          }
+        : undefined,
+  },
   include: {
     source: true,
   },
@@ -49,6 +61,32 @@ const toRelativeDate = (date: Date | null) => {
 };
 ---
 
+<style>
+  :root {
+    --background: #f3f4f6;
+    --primary-50: #5617dd;
+    --gray-50: #1f2231;
+    --gray-400: #0c0f1c;
+    --gray-500: #0b0e1c;
+  }
+  .source:after {
+    content: '';
+    height: 15px;
+    width: 15px;
+    border-radius: 15px;
+    background-color: var(--background);
+    display: block;
+    margin-left: 15px;
+  }
+  input[type='checkbox']:checked + .source {
+    background-color: var(--gray-500);
+  }
+
+  input[type='checkbox']:checked + .source::after {
+    background-color: var(--primary-50);
+  }
+</style>
+
 <Layout title="Welcome to Astro.">
   <section>
     <div class="flex flex-col py-5 sm:py-10 items-center">
@@ -56,20 +94,39 @@ const toRelativeDate = (date: Date | null) => {
       <p>Top Remote Jobs, Updated Daily</p>
     </div>
     <div class="flex w-full mt-10 min-w-[320px] overflow-x-auto space-x-0 sm:space-x-2">
-      <div class="rounded-xl border hidden sm:block border-neutral-900 p-2">
+      <form
+        action="/"
+        method="GET"
+        class="rounded-xl space-y-1 border hidden sm:block border-neutral-900 bg-gray-100 p-2"
+      >
         {
           sources.map((source, i) => {
-            const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
             return (
-              <div class={`flex border border-neutral-950 p-2 rounded-xl ${bg}`}>
-                <div class="p-2 font-bold">{source.name}</div>
-              </div>
+              <span class="block">
+                <input
+                  id={source.id}
+                  name="sources[]"
+                  value={source.name}
+                  class="hidden"
+                  type="checkbox"
+                  checked={sourcesQuery.includes(source.name)}
+                />
+                <label
+                  class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-4 rounded-xl bg-gray-200 source-parent`}
+                  for={source.id}
+                >
+                  {source.name}
+                </label>
+              </span>
             );
           })
         }
-
-        <button class="p-2 rounded-xl border border-neutral-950 bg-primary-200">Show All</button>
-      </div>
+        <hr />
+        <button class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-500 w-full">Show All</button>
+        <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"
+          >Filter</button
+        >
+      </form>
       <div class="space-y-4">
         <div class="overflow-y-auto sm:max-h-[60vh] rounded-xl border border-neutral-900 p-0 sm:px-2 space-y-2">
           {
@@ -109,7 +166,12 @@ const toRelativeDate = (date: Date | null) => {
         </div>
         <div class="flex justify-center items-center space-x-2 w-full">
           <div class="pagination">
-            <a href={`/?page=1`}>
+            <a
+              href={`/?${buildQueryString([
+                { key: 'page', value: `1` },
+                { key: 'sources[]', value: sourcesQuery },
+              ])}`}
+            >
               <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
             </a>
 
@@ -117,7 +179,12 @@ const toRelativeDate = (date: Date | null) => {
 
             {
               pageNumbers.map((i) => (
-                <a href={`/?page=${i}`}>
+                <a
+                  href={`/?${buildQueryString([
+                    { key: 'page', value: `${i}` },
+                    { key: 'sources[]', value: sourcesQuery },
+                  ])}`}
+                >
                   <button
                     class={`border border-neutral-900 rounded-xl px-2 py-1 ${
                       i === page ? 'bg-primary-200' : 'bg-gray-200'
@@ -131,7 +198,12 @@ const toRelativeDate = (date: Date | null) => {
 
             {endPage < numberOfPages && <span>...</span>}
 
-            <a href={`/?page=${numberOfPages}`}>
+            <a
+              href={`/?${buildQueryString([
+                { key: 'page', value: `${numberOfPages}` },
+                { key: 'sources[]', value: sourcesQuery },
+              ])}`}
+            >
               <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
             </a>
           </div>
