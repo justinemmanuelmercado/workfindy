@@ -25,15 +25,15 @@ if (notice?.source.name === 'Reddit') {
 ---
 
 <Layout title={notice.title || 'Job Title'}>
-  <div class="p-1 sm:p-2">
+  <div class="p-1 md:p-2">
     <div class="p-4 rounded-xl">
       <h1 class="text-3xl font-bold">{notice.title}</h1>
       <h2>{notice.source.name}</h2>
     </div>
-    <div class="flex justify-end flex-col sm:flex-row space-x-0 space-y-2 sm:space-y-0 sm:space-x-4">
+    <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
       <a class="block" href={notice.url}>
         <button
-          class="border border-primary-200 rounded-xl py-2 px-8 sm:px-5 w-full sm:w-fit font-bold text-primary-200"
+          class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-primary-200"
         >
           Apply
         </button>

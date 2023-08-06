@@ -1,0 +1,25 @@
+:root {
+  --background: #f3f4f6;
+  --primary-50: #5617dd;
+  --gray-50: #1f2231;
+  --gray-400: #0c0f1c;
+  --gray-500: #0b0e1c;
+}
+
+.source:after {
+  content: '';
+  height: 15px;
+  width: 15px;
+  border-radius: 15px;
+  background-color: var(--background);
+  display: block;
+  margin-left: 15px;
+}
+
+input[type='checkbox']:checked+.source {
+  background-color: var(--gray-500);
+}
+
+input[type='checkbox']:checked+.source::after {
+  background-color: var(--primary-50);
+}
