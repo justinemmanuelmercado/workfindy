@@ -21,7 +21,7 @@ model Notice {
   raw           String
   guid          String?
   publishedDate DateTime?
-  source        Source    @relation(fields: [sourceId], references: [id])
+  source        Source    @relation(fields: [sourceId], references: [name])
   keywords      Keyword[] @relation("KeywordToNotice")
 
   @@unique([guid, sourceId])
@@ -36,12 +36,11 @@ model Keyword {
 }
 
 model Source {
-  id          String   @id @default(uuid())
-  name        String   @unique
+  name        String   @id @unique
   description String?  @default("")
-  homepage    String?  @default("")
-  iconUrl     String?  @default("")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  homepage    String?  @default("")
+  iconUrl     String?  @default("")
   notices     Notice[]
 }

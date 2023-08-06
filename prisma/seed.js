@@ -34,25 +34,10 @@ const sources = [
     homepage: 'https://news.ycombinator.com',
   },
   {
-    name: 'CryptoJobsList',
-    description: '',
-    homepage: 'https://cryptojobslist.com',
-  },
-  {
     name: 'FOSSJobs',
     description: '',
     homepage: 'https://www.fossjobs.net',
-  },
-  {
-    name: 'Indeed',
-    description: '',
-    homepage: 'https://www.indeed.com',
-  },
-  {
-    name: 'Remoteok',
-    description: '',
-    homepage: 'https://remoteok.io',
-  },
+  }
 ];
 
 async function main() {
