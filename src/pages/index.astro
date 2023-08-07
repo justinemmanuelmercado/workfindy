@@ -69,142 +69,147 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
 ---
 
 <Layout title="Welcome to Astro.">
-  <section class="h-full flex-1 flex flex-col">
-    <div class="flex flex-col p-4 md:p-8 items-center">
-      <h1 class="text-2xl md:text-6xl font-bold">Find Freedom in Your Career</h1>
-      <p>Top Remote Jobs, Updated Daily</p>
-    </div>
-    <div
-      class="flex flex-col h-full lg:max-h-[90%] flex-grow md:flex-row w-full min-w-[320px] space-x-0 md:space-x-2 space-y-8 md:space-y-0"
-    >
-      <div class="flex flex-col space-y-2">
-        <form
-          action="/"
-          method="GET"
-          class="rounded-xl space-y-1 border flex flex-col border-neutral-900 bg-gray-100 p-2 h-fit"
-        >
-          <span class="flex md:flex-col overflow-x-auto space-x-2 md:space-x-0 space-y-0 md:space-y-1">
+  <div class="h-fit flex flex-col space-y-8">
+    <section class="flex flex-col">
+      <div class="flex flex-col p-4 md:p-8 items-center">
+        <h1 class="text-2xl md:text-6xl font-bold">Find Freedom in Your Career</h1>
+        <p>Top Remote Jobs, Updated Daily</p>
+      </div>
+      <div class="flex flex-col h-full lg:max-h-[90%] w-full min-w-[320px]">
+        <div class="flex flex-col space-y-2">
+          <form
+            action="/"
+            method="GET"
+            class="rounded-xl rounded-b-none border-b-0 space-y-1 border flex flex-col border-neutral-900 bg-gray-100 p-2 h-fit"
+          >
+            <span class="flex flex-wrap justify-evenly">
+              {
+                sources.map((source, i) => {
+                  return (
+                    <span class="block">
+                      <input
+                        id={source.name}
+                        name="sources[]"
+                        value={source.name}
+                        class="hidden"
+                        type="checkbox"
+                        checked={sourcesQuery.includes(source.name)}
+                      />
+                      <label
+                        class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
+                        for={source.name}
+                      >
+                        {source.name}
+                      </label>
+                    </span>
+                  );
+                })
+              }
+            </span>
+            <hr />
+            <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"
+              >Filter</button
+            >
+          </form>
+        </div>
+        <div class="flex flex-col h-[90%]">
+          <div class="flex-1 overflow-y-auto flex flex-col border-b-0 border border-neutral-900 p-4 space-y-2">
             {
-              sources.map((source, i) => {
+              notices.map((notice, i) => {
+                const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
                 return (
-                  <span class="block">
-                    <input
-                      id={source.name}
-                      name="sources[]"
-                      value={source.name}
-                      class="hidden"
-                      type="checkbox"
-                      checked={sourcesQuery.includes(source.name)}
-                    />
-                    <label
-                      class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-4 rounded-xl bg-gray-200 source-parent`}
-                      for={source.name}
-                    >
-                      {source.name}
-                    </label>
-                  </span>
+                  <div
+                    class={`flex flex-col p-2 rounded-xl ${bg} shadow-sm border border-neutral-800 space-y-1 md:p-4`}
+                  >
+                    <p class="font-bold">{notice.title}</p>
+                    <p class="text-xs font-extralight hover:text-primary-200">
+                      <a class="underline" href={notice.source.homepage}>
+                        {notice.source.name}
+                      </a>
+                    </p>
+                    <p class="hidden md:block">{printToHtmlAndTruncate(notice.body, 200)}</p>
+                    <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
+                    <hr />
+                    <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
+                      <a class="block" href={`/${notice.id}`}>
+                        <button class="border border-neutral-800 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-neutral-300">
+                          Details
+                        </button>
+                      </a>
+                      <a class="block" href={notice.url}>
+                        <button class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-primary-200">
+                          Apply
+                        </button>
+                      </a>
+                    </div>
+                  </div>
                 );
               })
             }
-          </span>
-          <hr />
-          <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"
-            >Filter</button
+          </div>
+          <div
+            class="flex-shrink bg-gray-100 rounded-xl p-2 border border-t-0 rounded-t-none border-neutral-800 flex flex-col items-center"
           >
-        </form>
-        <div class="bg-gray-100 p-4 rounded-xl">
-          <p>Get Notified on Discord!</p>
-        </div>
-        <div class="bg-gray-100 p-4 rounded-xl">
-          <input
-            type="text"
-            placeholder="you@example.com"
-            class="rounded-xl p-4 text-gray-500 bg-neutral-100 border border-neutral-500"
-          />
-          <p>Receive updates through email!</p>
-        </div>
-      </div>
-      <div class="flex flex-col space-y-4">
-        <div class="flex-1 overflow-y-auto flex flex-col rounded-xl border border-neutral-900 p-4 space-y-2">
-          {
-            notices.map((notice, i) => {
-              const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
-              return (
-                <div class={`flex flex-col p-8 rounded-xl ${bg} shadow-sm border border-neutral-800 space-y-2 md:p-4`}>
-                  <div class="flex">
-                    <p class="text-xs font-extralight rounded-xl border border-neutral-700 px-2">
-                      {notice.source.name}
-                    </p>
-                  </div>
-                  <p class="font-bold">{notice.title}</p>
-                  <p>{printToHtmlAndTruncate(notice.body, 200)}</p>
-                  <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
-                  <hr />
-                  <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
-                    <a class="block" href={`/${notice.id}`}>
-                      <button class="border border-neutral-800 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-neutral-300">
-                        Details
-                      </button>
-                    </a>
-                    <a class="block" href={notice.url}>
-                      <button class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-primary-200">
-                        Apply
-                      </button>
-                    </a>
-                  </div>
-                </div>
-              );
-            })
-          }
-        </div>
-        <div class="flex-shrink bg-gray-100 rounded-xl p-2 border border-neutral-800 flex flex-col items-center">
-          <p>Showing {currentPageIndex + 1} to {currentPageIndex + notices.length} of {noticesCount}</p>
-          <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
-            <div class="pagination">
-              <a
-                href={`/?${buildQueryString([
-                  { key: 'page', value: `1` },
-                  { key: 'sources[]', value: sourcesQuery },
-                ])}`}
-              >
-                <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
-              </a>
+            <p>Showing {currentPageIndex + 1} to {currentPageIndex + notices.length} of {noticesCount}</p>
+            <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
+              <div class="pagination">
+                <a
+                  href={`/?${buildQueryString([
+                    { key: 'page', value: `1` },
+                    { key: 'sources[]', value: sourcesQuery },
+                  ])}`}
+                >
+                  <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
+                </a>
 
-              {startPage > 1 && <span>...</span>}
+                {startPage > 1 && <span>...</span>}
 
-              {
-                pageNumbers.map((i) => (
-                  <a
-                    href={`/?${buildQueryString([
-                      { key: 'page', value: `${i}` },
-                      { key: 'sources[]', value: sourcesQuery },
-                    ])}`}
-                  >
-                    <button
-                      class={`border border-neutral-900 rounded-xl px-2 py-1 ${
-                        i === page ? 'bg-primary-200' : 'bg-gray-200'
-                      }`}
+                {
+                  pageNumbers.map((i) => (
+                    <a
+                      href={`/?${buildQueryString([
+                        { key: 'page', value: `${i}` },
+                        { key: 'sources[]', value: sourcesQuery },
+                      ])}`}
                     >
-                      {i}
-                    </button>
-                  </a>
-                ))
-              }
+                      <button
+                        class={`border border-neutral-900 rounded-xl px-2 py-1 ${
+                          i === page ? 'bg-primary-200' : 'bg-gray-200'
+                        }`}
+                      >
+                        {i}
+                      </button>
+                    </a>
+                  ))
+                }
 
-              {endPage < numberOfPages && <span>...</span>}
+                {endPage < numberOfPages && <span>...</span>}
 
-              <a
-                href={`/?${buildQueryString([
-                  { key: 'page', value: `${numberOfPages}` },
-                  { key: 'sources[]', value: sourcesQuery },
-                ])}`}
-              >
-                <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
-              </a>
+                <a
+                  href={`/?${buildQueryString([
+                    { key: 'page', value: `${numberOfPages}` },
+                    { key: 'sources[]', value: sourcesQuery },
+                  ])}`}
+                >
+                  <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <section class="max-h-full flex flex-col items-start">
+      <div class="flex flex-col justify-center items-center space-y-2 p-8 bg-gray-50 rounded-xl">
+        <h1>Join us on Discord to keep track of when new jobs get posted!</h1>
+        <a href="https://discord.gg/7NPYbapEHG" target="_blank" rel="noopener">
+          <img
+            class="h-[100px] w-[300px]"
+            src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
+            alt="Discord Banner 3"
+          />
+        </a>
+      </div>
+    </section>
+  </div>
 </Layout>
