@@ -1,0 +1,60 @@
+---
+import type { Source } from '@prisma/client';
+
+export interface Props {
+  sources: Source[];
+  sourcesQuery: string[];
+}
+
+const { sources, sourcesQuery } = Astro.props;
+---
+
+<form action="/" method="GET" class="flex flex-col space-y-2">
+  {
+    sources.map((source, i) => {
+      return (
+        <span class="block">
+          <input
+            id={source.name}
+            name="sources[]"
+            value={source.name}
+            class="hidden"
+            type="checkbox"
+            checked={sourcesQuery.includes(source.name)}
+          />
+          <label
+            class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
+            for={source.name}
+          >
+            {source.name}
+          </label>
+        </span>
+      );
+    })
+  }
+  <hr />
+  <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"> Filter</button>
+</form>
+<hr />
+<div class="space-y-2">
+  <div
+    class="flex flex-row p-1 py-4 border border-neutral-400 space-x-2 rounded-xl bg-secondary-200 justify-center items-center"
+  >
+    <span class="font-bold block">Suggest a job</span>
+  </div>
+  <div
+    class="flex flex-row p-1 py-4 border border-neutral-500 space-x-2 rounded-xl bg-primary-200 justify-center items-center"
+  >
+    <span class="font-bold block">How to use the site</span>
+  </div>
+  <div
+    class="flex flex-row p-1 py-4 border border-neutral-700 space-x-2 rounded-xl bg-neutral-900 justify-center items-center"
+  >
+    <img
+      class="h-[24px] w-[24px]"
+      src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
+      alt="Discord Banner"
+    />
+    <span class="font-bold block">Discord</span>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+---
+import { buildQueryString } from '../common';
+
+export interface Props {
+  currentPageIndex: number;
+  noticesCount: number;
+  noticesLength: number;
+  page: number;
+  sourcesQuery: string[];
+  limit: number;
+}
+
+const { currentPageIndex, noticesCount, noticesLength, page, sourcesQuery, limit } = Astro.props;
+
+const numberOfPages = Math.ceil(noticesCount / limit);
+let startPage = Math.max(1, page - 2);
+let endPage = Math.min(numberOfPages, page + 2);
+let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+---
+
+<div class="flex-shrink bg-gray-100 py-4 justify-center flex flex-col items-center sticky bottom-0 w-full shadow-xl">
+  <p>Showing {currentPageIndex + 1} to {currentPageIndex + noticesLength} of {noticesCount}</p>
+  <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
+    <div class="pagination">
+      <a
+        href={`/?${buildQueryString([
+          { key: 'page', value: `1` },
+          { key: 'sources[]', value: sourcesQuery },
+        ])}`}
+      >
+        <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
+      </a>
+
+      {startPage > 1 && <span>...</span>}
+
+      {
+        pageNumbers.map((i) => (
+          <a
+            href={`/?${buildQueryString([
+              { key: 'page', value: `${i}` },
+              { key: 'sources[]', value: sourcesQuery },
+            ])}`}
+          >
+            <button
+              class={`border border-neutral-900 rounded-xl px-2 py-1 ${i === page ? 'bg-primary-200' : 'bg-gray-200'}`}
+            >
+              {i}
+            </button>
+          </a>
+        ))
+      }
+
+      {endPage < numberOfPages && <span>...</span>}
+
+      <a
+        href={`/?${buildQueryString([
+          { key: 'page', value: `${numberOfPages}` },
+          { key: 'sources[]', value: sourcesQuery },
+        ])}`}
+      >
+        <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
+      </a>
+    </div>
+  </div>
+</div>

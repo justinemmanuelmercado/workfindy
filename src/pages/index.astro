@@ -1,9 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { buildQueryString, prisma, timeAgo } from '../common';
+import { prisma, timeAgo, buildQueryString } from '../common';
 import _ from 'lodash';
 import { decode } from 'html-entities';
 import '../styles/index.scss';
+import Layout from '../layouts/Layout.astro';
+import Filters from '../components/Filters.astro';
+import Pagination from '../components/Pagination.astro';
 
 const { truncate } = _;
 
@@ -61,155 +63,68 @@ const toRelativeDate = (date: Date | null) => {
   }
   return timeAgo.format(date);
 };
-
-const numberOfPages = Math.ceil(noticesCount / limit);
-let startPage = Math.max(1, page - 2);
-let endPage = Math.min(numberOfPages, page + 2);
-let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 ---
 
 <Layout title="Welcome to Astro.">
-  <div class="h-fit flex flex-col space-y-8">
-    <section class="flex flex-col">
-      <div class="flex flex-col p-4 md:p-8 items-center">
-        <h1 class="text-2xl md:text-6xl font-bold">Find Freedom in Your Career</h1>
-        <p>Top Remote Jobs, Updated Daily</p>
-      </div>
-      <div class="flex flex-col h-full lg:max-h-[90%] w-full min-w-[320px]">
-        <div class="flex flex-col space-y-2">
-          <form
-            action="/"
-            method="GET"
-            class="rounded-xl rounded-b-none border-b-0 space-y-1 border flex flex-col border-neutral-900 bg-gray-100 p-2 h-fit"
-          >
-            <span class="flex flex-wrap justify-evenly">
-              {
-                sources.map((source, i) => {
-                  return (
-                    <span class="block">
-                      <input
-                        id={source.name}
-                        name="sources[]"
-                        value={source.name}
-                        class="hidden"
-                        type="checkbox"
-                        checked={sourcesQuery.includes(source.name)}
-                      />
-                      <label
-                        class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
-                        for={source.name}
-                      >
-                        {source.name}
-                      </label>
-                    </span>
-                  );
-                })
-              }
-            </span>
-            <hr />
-            <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"
-              >Filter</button
-            >
-          </form>
-        </div>
-        <div class="flex flex-col h-[90%]">
-          <div class="flex-1 overflow-y-auto flex flex-col border-b-0 border border-neutral-900 p-4 space-y-2">
-            {
-              notices.map((notice, i) => {
-                const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
-                return (
-                  <div
-                    class={`flex flex-col p-2 rounded-xl ${bg} shadow-sm border border-neutral-800 space-y-1 md:p-4`}
-                  >
-                    <p class="font-bold">{notice.title}</p>
-                    <p class="text-xs font-extralight hover:text-primary-200">
-                      <a class="underline" href={notice.source.homepage}>
-                        {notice.source.name}
-                      </a>
-                    </p>
-                    <p class="hidden md:block">{printToHtmlAndTruncate(notice.body, 200)}</p>
-                    <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
-                    <hr />
-                    <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
-                      <a class="block" href={`/${notice.id}`}>
-                        <button class="border border-neutral-800 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-neutral-300">
-                          Details
-                        </button>
-                      </a>
-                      <a class="block" href={notice.url}>
-                        <button class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-primary-200">
-                          Apply
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                );
-              })
-            }
-          </div>
-          <div
-            class="flex-shrink bg-gray-100 rounded-xl p-2 border border-t-0 rounded-t-none border-neutral-800 flex flex-col items-center"
-          >
-            <p>Showing {currentPageIndex + 1} to {currentPageIndex + notices.length} of {noticesCount}</p>
-            <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
-              <div class="pagination">
-                <a
-                  href={`/?${buildQueryString([
-                    { key: 'page', value: `1` },
-                    { key: 'sources[]', value: sourcesQuery },
-                  ])}`}
-                >
-                  <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
-                </a>
-
-                {startPage > 1 && <span>...</span>}
-
-                {
-                  pageNumbers.map((i) => (
-                    <a
-                      href={`/?${buildQueryString([
-                        { key: 'page', value: `${i}` },
-                        { key: 'sources[]', value: sourcesQuery },
-                      ])}`}
-                    >
-                      <button
-                        class={`border border-neutral-900 rounded-xl px-2 py-1 ${
-                          i === page ? 'bg-primary-200' : 'bg-gray-200'
-                        }`}
-                      >
-                        {i}
-                      </button>
-                    </a>
-                  ))
-                }
-
-                {endPage < numberOfPages && <span>...</span>}
-
-                <a
-                  href={`/?${buildQueryString([
-                    { key: 'page', value: `${numberOfPages}` },
-                    { key: 'sources[]', value: sourcesQuery },
-                  ])}`}
-                >
-                  <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="flex flex-col lg:flex-row h-screen w-full min-w-[320px]">
+    <section class="bg-gray-100 p-2 sticky top-0 space-y-8">
+      <span class="flex justify-between">
+        <h1 class="text-2xl font-bold tracking-wide">Wemeowt</h1>
+        <label class="block-inline lg:hidden" for="filter-menu">Filters</label>
+      </span>
+      <div class="hidden lg:contents">
+        <Filters sources={sources} sourcesQuery={sourcesQuery} />
       </div>
     </section>
-    <section class="max-h-full flex flex-col items-start">
-      <div class="flex flex-col justify-center items-center space-y-2 p-8 bg-gray-50 rounded-xl">
-        <h1>Join us on Discord to keep track of when new jobs get posted!</h1>
-        <a href="https://discord.gg/7NPYbapEHG" target="_blank" rel="noopener">
-          <img
-            class="h-[100px] w-[300px]"
-            src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
-            alt="Discord Banner 3"
-          />
-        </a>
+    <input type="checkbox" class="peer/menu hidden" id="filter-menu" />
+
+    <div
+      class="fixed right-0 z-40 h-full w-full translate-x-full overflow-y-auto overscroll-y-none transition duration-500 peer-checked/menu:translate-x-0 bg-gray-500"
+    >
+      <label class="block-inline lg:hidden" for="filter-menu">Filters</label>
+      <Filters sources={sources} sourcesQuery={sourcesQuery} />
+    </div>
+    <section class="flex flex-col w-full max-h-screen overflow-y-auto relative space-y-2 bg-gray-500">
+      <div class="p-2 space-y-2">
+        {
+          notices.map((notice, i) => {
+            const bg = i % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
+            return (
+              <div class={`flex flex-col p-2 rounded-xl ${bg} shadow-sm border border-neutral-800 space-y-1 md:p-4`}>
+                <p class="font-bold">{notice.title}</p>
+                <p class="text-xs font-extralight hover:text-primary-200">
+                  <a class="underline" href={notice.source.homepage}>
+                    {notice.source.name}
+                  </a>
+                </p>
+                <p class="hidden md:block">{printToHtmlAndTruncate(notice.body, 200)}</p>
+                <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
+                <hr />
+                <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
+                  <a class="block" href={`/${notice.id}`}>
+                    <button class="border border-neutral-800 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-neutral-300">
+                      Details
+                    </button>
+                  </a>
+                  <a class="block" href={notice.url}>
+                    <button class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full md:w-fit font-bold text-primary-200">
+                      Apply
+                    </button>
+                  </a>
+                </div>
+              </div>
+            );
+          })
+        }
       </div>
+      <Pagination
+        currentPageIndex={currentPageIndex}
+        noticesCount={noticesCount}
+        noticesLength={notices.length}
+        page={page}
+        sourcesQuery={sourcesQuery}
+        limit={limit}
+      />
     </section>
   </div>
 </Layout>
