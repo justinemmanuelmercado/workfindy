@@ -14,7 +14,7 @@ const { currentPageIndex, noticesCount, noticesLength, page, sourcesQuery, limit
 
 const numberOfPages = Math.ceil(noticesCount / limit);
 let startPage = Math.max(1, page - 2);
-let endPage = Math.min(numberOfPages, page + 2);
+let endPage = Math.min(numberOfPages, page + 4);
 let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 ---
 

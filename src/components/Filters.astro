@@ -9,7 +9,7 @@ export interface Props {
 const { sources, sourcesQuery } = Astro.props;
 ---
 
-<form action="/" method="GET" class="flex flex-col space-y-2">
+<form action="/" method="GET" class="flex flex-1 flex-col space-y-2 overflow-y-auto">
   {
     sources.map((source, i) => {
       return (
@@ -23,7 +23,7 @@ const { sources, sourcesQuery } = Astro.props;
             checked={sourcesQuery.includes(source.name)}
           />
           <label
-            class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-950 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
+            class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-700 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
             for={source.name}
           >
             {source.name}
@@ -32,16 +32,9 @@ const { sources, sourcesQuery } = Astro.props;
       );
     })
   }
-  <hr />
   <button type="submit" class="p-4 font-bold rounded-xl border border-neutral-950 bg-gray-50 w-full"> Filter</button>
 </form>
-<hr />
-<div class="space-y-2">
-  <div
-    class="flex flex-row p-1 py-4 border border-neutral-400 space-x-2 rounded-xl bg-secondary-200 justify-center items-center"
-  >
-    <span class="font-bold block">Suggest a job</span>
-  </div>
+<div class="space-y-2 flex-grow justify-end flex flex-col">
   <div
     class="flex flex-row p-1 py-4 border border-neutral-500 space-x-2 rounded-xl bg-primary-200 justify-center items-center"
   >
