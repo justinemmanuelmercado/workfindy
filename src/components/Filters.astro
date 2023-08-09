@@ -7,6 +7,11 @@ export interface Props {
 }
 
 const { sources, sourcesQuery } = Astro.props;
+// Random number
+const id = Math.random().toString(36).substring(7);
+const nameify = (name: string) => {
+  return name + id;
+};
 ---
 
 <form action="/" method="GET" class="flex flex-1 flex-col space-y-2 overflow-y-auto">
@@ -15,7 +20,7 @@ const { sources, sourcesQuery } = Astro.props;
       return (
         <span class="block">
           <input
-            id={source.name}
+            id={nameify(source.name)}
             name="sources[]"
             value={source.name}
             class="hidden"
@@ -24,7 +29,7 @@ const { sources, sourcesQuery } = Astro.props;
           />
           <label
             class={`source flex justify-between cursor-pointer items-center border w-full border-neutral-700 p-2 md:p-4 rounded-xl bg-gray-200 source-parent`}
-            for={source.name}
+            for={nameify(source.name)}
           >
             {source.name}
           </label>
@@ -38,16 +43,18 @@ const { sources, sourcesQuery } = Astro.props;
   <div
     class="flex flex-row p-1 py-4 border border-neutral-500 space-x-2 rounded-xl bg-primary-200 justify-center items-center"
   >
-    <span class="font-bold block">How to use the site</span>
+    <a href="/about" class="font-bold block">How to use the site</a>
   </div>
-  <div
-    class="flex flex-row p-1 py-4 border border-neutral-700 space-x-2 rounded-xl bg-neutral-900 justify-center items-center"
-  >
-    <img
-      class="h-[24px] w-[24px]"
-      src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
-      alt="Discord Banner"
-    />
-    <span class="font-bold block">Discord</span>
-  </div>
+  <a href="https://discord.gg/H2HQhtBect">
+    <div
+      class="flex flex-row p-1 py-4 border border-neutral-700 space-x-2 rounded-xl bg-neutral-900 justify-center items-center"
+    >
+      <img
+        class="h-[24px] w-[24px]"
+        src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
+        alt="Discord Banner"
+      />
+      <span class="font-bold block">Discord</span>
+    </div>
+  </a>
 </div>
