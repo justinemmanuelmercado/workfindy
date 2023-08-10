@@ -14,11 +14,13 @@ const { currentPageIndex, noticesCount, noticesLength, page, sourcesQuery, limit
 
 const numberOfPages = Math.ceil(noticesCount / limit);
 let startPage = Math.max(1, page - 2);
-let endPage = Math.min(numberOfPages, page + 4);
+let endPage = Math.min(numberOfPages, page + 2);
 let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 ---
 
-<div class="flex-shrink bg-gray-100 py-4 justify-center flex flex-col items-center sticky bottom-0 w-full shadow-xl">
+<div
+  class="flex-shrink bg-gray-100 border-t border-t-neutral-700 py-4 justify-center flex flex-col items-center sticky bottom-0 w-full shadow-xl"
+>
   <p>Showing {currentPageIndex + 1} to {currentPageIndex + noticesLength} of {noticesCount}</p>
   <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
     <div class="pagination">
@@ -28,7 +30,7 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
           { key: 'sources[]', value: sourcesQuery },
         ])}`}
       >
-        <button class="border border-neutral-900 rounded-xl px-2 py-1">First</button>
+        <button class="border border-neutral-700 rounded-xl px-2 py-1 bg-gray-200">First</button>
       </a>
 
       {startPage > 1 && <span>...</span>}
@@ -42,7 +44,7 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
             ])}`}
           >
             <button
-              class={`border border-neutral-900 rounded-xl px-2 py-1 ${i === page ? 'bg-primary-200' : 'bg-gray-200'}`}
+              class={`border border-neutral-700 rounded-xl px-2 py-1 ${i === page ? 'bg-primary-200' : 'bg-gray-200'}`}
             >
               {i}
             </button>
@@ -58,7 +60,7 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
           { key: 'sources[]', value: sourcesQuery },
         ])}`}
       >
-        <button class="border border-neutral-900 rounded-xl px-2 py-1">Last</button>
+        <button class="border border-neutral-700 rounded-xl px-2 py-1 bg-gray-200">Last</button>
       </a>
     </div>
   </div>
