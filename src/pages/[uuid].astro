@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 import { prisma } from '../common';
 import { decode } from 'html-entities';
 
@@ -25,6 +26,7 @@ if (notice?.source.name === 'Reddit') {
 ---
 
 <Layout title={notice.title || 'Job Title'}>
+  <Header />
   <div class="p-1 md:p-2">
     <div class="p-4 rounded-xl">
       <h1 class="text-3xl font-bold">{notice.title}</h1>
