@@ -128,14 +128,7 @@ const toRelativeDate = (date: Date | null) => {
           })
         }
       </div>
-      <Pagination
-        currentPageIndex={currentPageIndex}
-        noticesCount={noticesCount}
-        noticesLength={notices.length}
-        page={page}
-        sourcesQuery={sourcesQuery}
-        limit={limit}
-      />
+      <Pagination noticesCount={noticesCount} page={page} sourcesQuery={sourcesQuery} limit={limit} />
     </section>
   </div>
 </Layout>
