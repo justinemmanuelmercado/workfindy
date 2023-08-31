@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { decode } from 'html-entities';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
-import { truncate } from 'lodash';
+import _ from 'lodash';
 TimeAgo.addDefaultLocale(en);
 
 export const prisma: PrismaClient = global.prisma || new PrismaClient();
@@ -15,6 +15,8 @@ type QueryParam = {
   key: string;
   value: string | string[];
 };
+
+const { truncate } = _;
 
 export function buildQueryString(params: QueryParam[]): string {
   return params
