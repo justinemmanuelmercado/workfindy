@@ -1,5 +1,5 @@
 ---
-import { prisma, timeAgo } from '../common';
+import { printToHtmlAndTruncate, prisma, toRelativeDate } from '../common';
 import _ from 'lodash';
 import { decode } from 'html-entities';
 import '../styles/index.scss';
@@ -46,23 +46,6 @@ const notices = await prisma.notice.findMany({
 });
 
 const sources = await prisma.source.findMany();
-
-// Removes html tags and escaped html tags
-const printToHtmlAndTruncate = (text: string, length: number) => {
-  // If id is in cache return it
-  const htmlString = decode(text, { level: 'html5' });
-  const html = htmlString.replace(/<[^>]*>?/gm, '');
-  // Set cache for notice here
-  // Double encoding because of stupid strings from reddit like this I&amp;#39;m
-  return truncate(decode(html), { length, separator: '...' });
-};
-
-const toRelativeDate = (date: Date | null) => {
-  if (!date) {
-    return 'Unknown';
-  }
-  return timeAgo.format(date);
-};
 ---
 
 <Layout title="WorkFindy | Remote Work Job List">
@@ -95,7 +78,7 @@ const toRelativeDate = (date: Date | null) => {
         </span>
       </div>
     </div>
-    <section class="flex flex-col w-full max-h-screen overflow-y-auto relative space-y-2 bg-gray-500">
+    <section class="flex flex-col w-full max-h-screen overflow-y-auto relative space-y-2 bg-neutral-950">
       <div class="p-4 space-y-2">
         {
           notices.map((notice, i) => {

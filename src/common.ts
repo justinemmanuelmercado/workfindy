@@ -1,13 +1,15 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { decode } from 'html-entities';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { truncate } from 'lodash';
 TimeAgo.addDefaultLocale(en);
 
 export const prisma: PrismaClient = global.prisma || new PrismaClient();
 export const timeAgo = global.timeAgo || new TimeAgo('en-US');
 
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
-if (process.env.NODE_ENV !== "production") global.timeAgo = timeAgo;
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') global.timeAgo = timeAgo;
 
 type QueryParam = {
   key: string;
@@ -25,3 +27,20 @@ export function buildQueryString(params: QueryParam[]): string {
     })
     .join('&');
 }
+
+export const toRelativeDate = (date: Date | null) => {
+  if (!date) {
+    return 'Unknown';
+  }
+  return timeAgo.format(date);
+};
+
+// Removes html tags and escaped html tags
+export const printToHtmlAndTruncate = (text: string, length: number) => {
+  // If id is in cache return it
+  const htmlString = decode(text, { level: 'html5' });
+  const html = htmlString.replace(/<[^>]*>?/gm, '');
+  // Set cache for notice here
+  // Double encoding because of stupid strings from reddit like this I&amp;#39;m
+  return truncate(decode(html), { length, separator: '...' });
+};
