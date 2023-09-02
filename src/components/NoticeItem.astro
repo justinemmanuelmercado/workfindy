@@ -1,0 +1,43 @@
+---
+import type { GetResult } from '@prisma/client/runtime';
+import { buildQueryString, printToHtml, printToHtmlAndTruncate, toRelativeDate } from '../common';
+import type { Notice, Prisma } from '@prisma/client';
+
+type NoticeWithSource = Prisma.NoticeGetPayload<{
+  include: {
+    source: true;
+  };
+}>;
+
+export interface Props {
+  notice: NoticeWithSource;
+  idx: number;
+}
+
+const { notice, idx = 0 } = Astro.props;
+const bg = idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
+---
+
+<div
+  class={`flex flex-col p-4 rounded-xl ${bg} shadow-sm hover:border-neutral-500 border border-neutral-900 space-y-1 md:p-4`}
+>
+  <a href={`/${notice.id}`}>
+    <p class="font-bold">{printToHtml(notice.title)}</p>
+
+    <p class="hidden md:block">{printToHtmlAndTruncate(notice.body, 150)}</p>
+    <p class="text-xs font-extralight">{toRelativeDate(notice.publishedDate)}</p>
+  </a>
+  <p class="text-xs font-extralight hover:text-primary-200">
+    <a class="underline" href={notice.source.homepage}>
+      From {notice.source.name}
+    </a>
+  </p>
+  <hr />
+  <div class="flex justify-end">
+    <a class="block w-full md:w-fit" href={notice.url}>
+      <button class="border border-primary-200 rounded-xl py-2 px-8 md:px-5 w-full font-bold text-primary-200">
+        Apply
+      </button>
+    </a>
+  </div>
+</div>

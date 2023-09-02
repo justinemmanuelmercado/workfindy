@@ -37,10 +37,12 @@ export const toRelativeDate = (date: Date | null) => {
   return timeAgo.format(date);
 };
 
+export const printToHtml = (text: string) => decode(text, { level: 'html5' });
+
 // Removes html tags and escaped html tags
 export const printToHtmlAndTruncate = (text: string, length: number) => {
   // If id is in cache return it
-  const htmlString = decode(text, { level: 'html5' });
+  const htmlString = printToHtml(text);
   const html = htmlString.replace(/<[^>]*>?/gm, '');
   // Set cache for notice here
   // Double encoding because of stupid strings from reddit like this I&amp;#39;m
