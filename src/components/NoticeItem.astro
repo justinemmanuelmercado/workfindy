@@ -1,6 +1,5 @@
 ---
-import type { GetResult } from '@prisma/client/runtime';
-import { buildQueryString, printToHtml, printToHtmlAndTruncate, toRelativeDate } from '../common';
+import { printToHtml, printToHtmlAndTruncate, toRelativeDate } from '../common';
 import type { Notice, Prisma } from '@prisma/client';
 
 type NoticeWithSource = Prisma.NoticeGetPayload<{
