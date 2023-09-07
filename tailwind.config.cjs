@@ -3,6 +3,11 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,astro}'],
   darkMode: 'class',
   theme: {
+    extend: {
+      height: {
+        screen: ['100vh /* fallback for Opera, IE and etc. */', '100dvh'],
+      },
+    },
     colors: {
       primary: {
         50: '#5617DD',
