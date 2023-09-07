@@ -52,6 +52,10 @@ if (notice?.source.name === 'Remotive') {
   };
   notice.body = cleanHtml(notice.body);
 }
+
+if (notice.body.length < 3) {
+  notice.body = '<p></p><i>No description available</i><p></p>';
+}
 ---
 
 <Layout title={notice.title || 'Job Title'}>
