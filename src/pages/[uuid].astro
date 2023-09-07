@@ -43,11 +43,20 @@ if (!notice) {
 if (notice?.source.name === 'Reddit') {
   notice.body = decode(notice.body, { level: 'html5' });
 }
+
+if (notice?.source.name === 'Remotive') {
+  // Remove the color style from the html and empty P tags
+  const cleanHtml = (htmlString: string) => {
+    const cleaned = htmlString.replace(/style="[^"]*color:[^";]*;?[^"]*"/g, '');
+    return cleaned;
+  };
+  notice.body = cleanHtml(notice.body);
+}
 ---
 
 <Layout title={notice.title || 'Job Title'}>
   <Header />
-  <div class="p-1 md:p-2 max-w-7xl m-auto">
+  <main class="p-1 md:p-2 max-w-7xl m-auto">
     <div class="p-4 rounded-xl space-y-4">
       <div class="inline-block">
         <h2>{notice.source.name}</h2>
@@ -71,7 +80,7 @@ if (notice?.source.name === 'Reddit') {
     <div class="flex justify-end flex-col md:flex-row space-x-0 space-y-2 md:space-y-0 md:space-x-4">
       <a class="block" href={notice.url}> </a>
     </div>
-    <main class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2">
       <section>
         <h1 class="text-3xl font-bold py-4">{printToHtml(notice.title)}</h1>
         <div class="bg-neutral-950 border border-neutral-800 px-4 overflow-y-scroll">
@@ -93,6 +102,6 @@ if (notice?.source.name === 'Reddit') {
           }
         </div>
       </section>
-    </main>
-  </div>
+    </div>
+  </main>
 </Layout>
