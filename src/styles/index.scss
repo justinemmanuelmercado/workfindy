@@ -25,9 +25,9 @@ input[type='checkbox']:checked+.source::after {
 }
 
 .background--custom {
-  background: linear-gradient(90deg, #4f25a9, #0b0e1c, #121421);
+  background: linear-gradient(90deg, #121421, #130435, #262626);
   background-size: 300% 300%;
-  animation: gradient 8s alternate infinite;
+  animation: gradient 4s alternate infinite;
   top: 0;
   left: 0;
   height: 100%;
