@@ -3,13 +3,12 @@ import { prisma } from '../common';
 import _ from 'lodash';
 import '../styles/index.scss';
 import Layout from '../layouts/Layout.astro';
-import Filters from '../components/Filters.astro';
-import Pagination from '../components/Pagination.astro';
 import NoticeItem from '../components/NoticeItem.astro';
+import Header from '../components/Header.astro';
 
 const { truncate } = _;
 
-const limit = 12;
+const limit = 5;
 const page = parseInt(Astro.url.searchParams.get('page') || '1');
 const sourcesQuery = Astro.url.searchParams.getAll('sources[]');
 
@@ -59,42 +58,67 @@ const sources = await prisma.source.findMany({
 ---
 
 <Layout title="WorkFindy | Remote Work Job List">
-  <div class="flex flex-col lg:flex-row h-screen w-full min-w-[320px] m-auto">
-    <section class="bg-gray-100 border-b border-r border-neutral-950 sticky top-0 lg:h-screen">
-      <span class="flex justify-between lg:justify-center p-4">
-        <span class="w-20 text-primary-200 flex items-center justify-center">
-          <img src="./logo.svg" alt="" />
-        </span>
-
-        <label class="w-8 text-neutral-100 flex justify-center lg:hidden" for="filter-menu">
-          <img src="./menu.svg" alt="" />
-        </label>
-      </span>
-      <div class="hidden lg:block space-y-8 px-2">
-        <Filters sources={sources} sourcesQuery={sourcesQuery} />
+  <Header />
+  <section class="w-screen relative background--custom">
+    {/* Illustration behind hero content */}
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      {/* Hero content */}
+      <div class="pt-32 pb-12 md:pt-40 md:pb-20">
+        {/* Section header */}
+        <div class="text-center pb-12 md:pb-16">
+          <h1 class="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4" data-aos="zoom-y-out">
+            Get the latest remote jobs from across the board
+          </h1>
+          <div class="max-w-3xl mx-auto">
+            <div class="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center">
+              <a href="/jobs">
+                <div
+                  class="flex flex-row p-4 border border-neutral-100 space-x-2 rounded-xl bg-primary-200 justify-center items-center hover:bg-primary-50 hover:border-neutral-300 transition"
+                >
+                  <span class="font-bold block">Find your dream job</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
-    <input type="checkbox" class="peer hidden" id="filter-menu" />
-    <div class="hidden fixed top-0 z-40 h-full w-full overflow-y-auto overscroll-y-none peer-checked:flex">
-      <label for="filter-menu" class="w-1/5 h-full opacity-80 bg-gray-100 block"></label>
-      <div class="w-4/5 p-4 bg-gray-500 border-l border-neutral-700">
-        <label class="lg:hidden" for="filter-menu">
-          <img class="w-12" src="./close.svg" alt="Close menu button" />
-        </label>
-        <span class="block pt-2 space-y-8">
-          <Filters sources={sources} sourcesQuery={sourcesQuery} />
-        </span>
+      <div class="flex flex-col w-full overflow-y-auto relative space-y-2">
+        <div class="p-4 space-y-2">
+          {
+            notices.map((notice, i) => {
+              return <NoticeItem notice={notice} idx={i} />;
+            })
+          }
+          <div
+            class={`flex flex-col p-4 rounded-xl bg-gray-200 shadow-sm hover:border-primary-200 hover:bg-gray-100 transition border border-neutral-900 space-y-1 md:p-4`}
+          >
+            <a href={`/jobs`} class="content flex gap-4 flex-col items-center">
+              <p class="font-bold">See More</p>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-    <section class="flex flex-col w-full max-h-screen overflow-y-auto relative space-y-2 bg-neutral-950">
-      <div class="p-4 space-y-2">
-        {
-          notices.map((notice, i) => {
-            return <NoticeItem notice={notice} idx={i} />;
-          })
-        }
-      </div>
-      <Pagination noticesCount={noticesCount} page={page} sourcesQuery={sourcesQuery} limit={limit} />
-    </section>
-  </div>
+  </section>
 </Layout>
+
+<style>
+  .background--custom {
+    background: linear-gradient(90deg, #4f25a9, #0b0e1c, #121421);
+    background-size: 300% 300%;
+    animation: gradient 8s alternate infinite;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+  @keyframes gradient {
+    0% {
+      background-position: 0%;
+    }
+    100% {
+      background-position: 100%;
+    }
+  }
+</style>

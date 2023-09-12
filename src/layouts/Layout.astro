@@ -26,5 +26,16 @@ const { title } = Astro.props;
     <main class="text-sm md:text-base">
       <slot />
     </main>
+    <footer class="flex items-center gap-4 max-w-7xl m-auto p-8">
+      <div>© 2023 Justin Mercado</div>
+      <div class="flex gap-4">
+        <a href="http://discord.com/users/513921665810300947" target="_blank">
+          <img src="/discord.svg" alt="Discord" class="w-6" />
+        </a>
+        <a href="mailto:workfindy@ejmercado.com" target="_blank">
+          <img src="/mail.svg" alt="Mail icon" class="w-6" />
+        </a>
+      </div>
+    </footer>
   </body>
 </html>

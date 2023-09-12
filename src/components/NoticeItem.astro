@@ -18,7 +18,7 @@ const bg = idx % 2 === 0 ? 'bg-gray-200' : 'bg-gray-300';
 ---
 
 <div
-  class={`flex flex-col p-4 rounded-xl ${bg} shadow-sm hover:border-neutral-500 border border-neutral-900 space-y-1 md:p-4`}
+  class={`flex flex-col p-4 rounded-xl ${bg} shadow-sm hover:border-primary-200 hover:bg-gray-100 transition border border-neutral-900 space-y-1 md:p-4`}
 >
   <a href={`/${notice.id}`} class="content flex gap-4 flex-col">
     <p class="font-bold">{printToHtml(notice.title)}</p>
