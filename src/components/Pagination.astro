@@ -22,7 +22,7 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
   <div class="flex flex-shrink-0 justify-center items-center space-x-2 w-full">
     <div class="pagination">
       <a
-        href={`/?${buildQueryString([
+        href={`/jobs?${buildQueryString([
           { key: 'page', value: `1` },
           { key: 'sources[]', value: sourcesQuery },
         ])}`}
@@ -35,7 +35,7 @@ let pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => star
       {
         pageNumbers.map((i) => (
           <a
-            href={`/?${buildQueryString([
+            href={`/jobs?${buildQueryString([
               { key: 'page', value: `${i}` },
               { key: 'sources[]', value: sourcesQuery },
             ])}`}
