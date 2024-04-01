@@ -13,14 +13,14 @@ services:
     volumes:
       - ./data/phdev:/var/lib/postgresql/data
   web:
-    image: ejmercado/wemeowt:latest 
-    build: 
+    image: ejmercado/wemeowt:latest
+    build:
       context: .
       dockerfile: Dockerfile
-    env_file: .env.docker
     environment:
       - HOST=0.0.0.0
       - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - '3000:3000'
     depends_on:
