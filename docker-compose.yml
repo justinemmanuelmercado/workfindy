@@ -25,6 +25,21 @@ services:
       - '3000:3000'
     depends_on:
       - db
+  postgrest:
+    container_name: postgrest
+    image: postgrest/postgrest:latest
+    ports:
+      - '3001:3000'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGRST_DB_URI=${PGRST_DB_URI}
+      - PGRST_DB_SCHEMAS=public
+      - PGRST_DB_ANON_ROLE=${POSTGRES_ANON_ROLE}
+    depends_on:
+      - db
+
 volumes:
   db:
     driver: local
