@@ -29,7 +29,7 @@ services:
     container_name: postgrest
     image: postgrest/postgrest:latest
     ports:
-      - '3001:3000'
+      - '80:3000'
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -37,7 +37,6 @@ services:
       - PGRST_DB_URI=${PGRST_DB_URI}
       - PGRST_DB_SCHEMAS=public
       - PGRST_DB_ANON_ROLE=${POSTGRES_ANON_ROLE}
-      - PGRST_SERVER_PROXY_URI=${PGRST_SERVER_PROXY_URI}
     depends_on:
       - db
 
